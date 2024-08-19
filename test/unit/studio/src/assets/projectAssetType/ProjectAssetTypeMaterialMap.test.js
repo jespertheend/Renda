@@ -1,7 +1,7 @@
 import { assertSpyCall, assertSpyCalls, spy, stub } from "std/testing/mock.ts";
 import { assertEquals, assertInstanceOf, assertStrictEquals } from "std/testing/asserts.ts";
 import "../../../shared/initializeStudio.js";
-import { ProjectAssetTypeMaterialMap } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeMaterialMap.js";
+import { ProjectAssetTypeMaterialMap } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeMaterialMap.js";
 import { MaterialMap } from "../../../../../../src/rendering/MaterialMap.js";
 import { createMockDependencies, getMockRecursionTracker } from "./shared.js";
 import { MaterialMapType } from "../../../../../../src/rendering/MaterialMapType.js";

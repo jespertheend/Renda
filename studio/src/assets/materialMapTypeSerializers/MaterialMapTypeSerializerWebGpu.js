@@ -2,14 +2,14 @@ import { MaterialMapTypeSerializer } from "./MaterialMapTypeSerializer.js";
 import { StorageType } from "../../../../src/util/binarySerialization.js";
 import { WebGpuPipelineConfig } from "../../../../src/mod.js";
 import { WebGpuMaterialMapType } from "../../../../src/rendering/renderers/webGpu/WebGpuMaterialMapType.js";
-import { ProjectAssetTypeWebGpuPipelineConfig } from "../projectAssetType/ProjectAssetTypeWebGpuPipelineConfig.js";
+import { webGpuPipelineConfigProjectAssetType } from "../projectAssetTypes/webGpuPipelineConfig.js";
 import { parseBindings, parseMaterialUniforms } from "../../../../src/util/wgslParsing.js";
 
 const FORWARD_PIPELINE_CONFIG_PERSISTENCE_KEY = "webgpumaptype.forwardpipelineconfig";
 
 /**
  * @typedef {object} WebGpuMaterialMapTypeDiskData
- * @property {import("../../../../src/util/mod.js").UuidString | import("../projectAssetType/ProjectAssetTypeWebGpuPipelineConfig.js").WebGpuPipelineConfigAssetData | null} [forwardPipelineConfig]
+ * @property {import("../../../../src/util/mod.js").UuidString | import("../projectAssetTypes/webGpuPipelineConfig.js").webGpuPipelineConfigProjectAssetType | null} [forwardPipelineConfig]
  */
 
 export class MaterialMapTypeSerializerWebGpu extends MaterialMapTypeSerializer {
@@ -38,7 +38,7 @@ export class MaterialMapTypeSerializerWebGpu extends MaterialMapTypeSerializer {
 		let pipelineConfig = null;
 		if (customData?.forwardPipelineConfig) {
 			pipelineConfig = await context.assetManager.getLiveAssetFromUuidOrEmbeddedAssetData(customData.forwardPipelineConfig, {
-				assertAssetType: ProjectAssetTypeWebGpuPipelineConfig,
+				assertAssetType: webGpuPipelineConfigProjectAssetType,
 				parentAsset: context.materialMapAsset,
 				embeddedAssetPersistenceKey: FORWARD_PIPELINE_CONFIG_PERSISTENCE_KEY,
 			});
@@ -98,7 +98,7 @@ export class MaterialMapTypeSerializerWebGpu extends MaterialMapTypeSerializer {
 		let forwardPipelineConfig = null;
 		if (customData?.forwardPipelineConfig) {
 			const forwardPipelineConfigAsset = await context.assetManager.getProjectAssetFromUuidOrEmbeddedAssetData(customData.forwardPipelineConfig, {
-				assertAssetType: ProjectAssetTypeWebGpuPipelineConfig,
+				assertAssetType: webGpuPipelineConfigProjectAssetType,
 				parentAsset: context.materialMapAsset,
 				embeddedAssetPersistenceKey: FORWARD_PIPELINE_CONFIG_PERSISTENCE_KEY,
 			});
@@ -134,7 +134,7 @@ export class MaterialMapTypeSerializerWebGpu extends MaterialMapTypeSerializer {
 	static async *getLinkedAssetsInCustomData(studioInstance, assetManager, customData) {
 		await studioInstance.projectManager.waitForAssetListsLoad();
 		const pipelineConfigAsset = await assetManager.getProjectAssetFromUuid(customData.forwardPipelineConfig, {
-			assertAssetType: ProjectAssetTypeWebGpuPipelineConfig,
+			assertAssetType: webGpuPipelineConfigProjectAssetType,
 		});
 		if (pipelineConfigAsset) yield pipelineConfigAsset;
 	}

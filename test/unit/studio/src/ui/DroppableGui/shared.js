@@ -86,7 +86,7 @@ export function createMockDroppableProjectAsset({
  * @param {object} options
  * @param {"basic" | "defaultAssetLink" | "embedded" | "none"} [options.valueType]
  * @param {Partial<import("../../../../../../studio/src/ui/DroppableGui.js").DroppableGuiOptions<any>>} [options.guiOpts]
- * @param {Iterable<[(new (...args: any) => any), Iterable<typeof import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetType>]>} [options.liveAssetProjectAssetTypeCombinations] The list of Project assets that should be returned for a call to ProjectAssetTypeManager.getAssetTypesForLiveAssetConstructor().
+ * @param {Iterable<[(new (...args: any) => any), Iterable<typeof import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType>]>} [options.liveAssetProjectAssetTypeCombinations] The list of Project assets that should be returned for a call to ProjectAssetTypeManager.getAssetTypesForLiveAssetConstructor().
  * @param {boolean} [options.needsLiveAssetPreload] Set to true if you want getLiveAssetSync() to behave like the real ProjectAsset.
  * @param {PermissionState} [options.clipboardReadPermissionState] The permission state returned by navigator.permissions.query() for "clipboard-read".
  * @param {string} [options.clipboardReadTextReturn] The string returned by navigator.clipboard.readText().
@@ -130,7 +130,7 @@ export function createBasicGui({
 	navigator.clipboard = stubClipboard;
 
 	/**
-	 * @param {import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeIdentifier | typeof import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetType} assetType
+	 * @param {import("../../../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeIdentifier | import("../../../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} assetType
 	 * @param {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAssetAny} parent
 	 * @param {string} persistenceKey
 	 */
@@ -347,7 +347,7 @@ export function createMockProjectAssetType({
 	}
 
 	const cast1 = /** @type {unknown} */ (MockProjectAssetType);
-	const cast2 = /** @type {typeof import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetType} */ (cast1);
+	const cast2 = /** @type {typeof import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType} */ (cast1);
 
 	return {
 		MockLiveAssetConstructor,

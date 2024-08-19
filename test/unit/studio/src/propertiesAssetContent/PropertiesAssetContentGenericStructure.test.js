@@ -16,7 +16,7 @@ class MockProjectAssetType {
 		return "UI name";
 	}
 }
-const mockAssetType = /** @type {import("../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} */ (new MockProjectAssetType());
+const mockAssetType = /** @type {import("../../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} */ (new MockProjectAssetType());
 
 Deno.test({
 	name: "Setting structure",

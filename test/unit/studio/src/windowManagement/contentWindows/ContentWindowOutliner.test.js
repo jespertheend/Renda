@@ -17,7 +17,7 @@ import { DragManager } from "../../../../../../studio/src/misc/DragManager.js";
 import { parseMimeType } from "../../../../../../studio/src/util/util.js";
 import { createMockPopoverManager, triggerContextMenuItem } from "../../../shared/contextMenuHelpers.js";
 import { injectMockStudioInstance } from "../../../../../../studio/src/studioInstance.js";
-import { ProjectAssetTypeEntity } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeEntity.js";
+import { ProjectAssetTypeEntity } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeEntity.js";
 import { createMockProjectAsset } from "../../../shared/createMockProjectAsset.js";
 import { EventHandler } from "../../../../../../src/util/EventHandler.js";
 

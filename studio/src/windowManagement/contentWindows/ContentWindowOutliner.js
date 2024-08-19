@@ -3,7 +3,7 @@ import { TreeView } from "../../ui/TreeView.js";
 import { Button } from "../../ui/Button.js";
 import { Entity } from "../../../../src/mod.js";
 import { ContentWindowEntityEditor } from "./ContentWindowEntityEditor/ContentWindowEntityEditor.js";
-import { ProjectAssetTypeEntity } from "../../assets/projectAssetType/ProjectAssetTypeEntity.js";
+// import { ProjectAssetTypeEntity } from "../../assets/projectAssetTypes/ProjectAssetTypeEntity.js";
 import { parseMimeType } from "../../util/util.js";
 import { EntitySelection } from "../../misc/EntitySelection.js";
 import { DropDownGui } from "../../ui/DropDownGui.js";

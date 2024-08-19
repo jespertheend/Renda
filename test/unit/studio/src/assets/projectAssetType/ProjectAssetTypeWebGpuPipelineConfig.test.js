@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf, assertStrictEquals } from "std/testing/asserts.ts";
 import { AssetLoaderTypeWebGpuPipelineConfig, WebGpuPipelineConfig } from "../../../../../../src/mod.js";
-import { ProjectAssetTypeWebGpuPipelineConfig } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeWebGpuPipelineConfig.js";
+import { ProjectAssetTypeWebGpuPipelineConfig } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeWebGpuPipelineConfig.js";
 import { createMockDependencies, serializeAndLoad } from "./shared.js";
 
 /**

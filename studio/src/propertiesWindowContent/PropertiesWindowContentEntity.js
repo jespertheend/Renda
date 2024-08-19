@@ -2,7 +2,6 @@ import { PropertiesWindowContent } from "./PropertiesWindowContent.js";
 import { PropertiesTreeView } from "../ui/propertiesTreeView/PropertiesTreeView.js";
 import { Button } from "../ui/Button.js";
 import { DroppableGui } from "../ui/DroppableGui.js";
-import { ProjectAssetTypeEntity } from "../assets/projectAssetType/ProjectAssetTypeEntity.js";
 import { EntitySelection } from "../misc/EntitySelection.js";
 import { EntityChangeType } from "../assets/EntityAssetManager.js";
 

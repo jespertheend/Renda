@@ -1,7 +1,7 @@
 import "../../../shared/initializeStudio.js";
 import { AssertionError, assertEquals, assertExists, assertStrictEquals } from "std/testing/asserts.ts";
 import { assertSpyCall, assertSpyCalls, spy, stub } from "std/testing/mock.ts";
-import { ProjectAssetTypeMaterial } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeMaterial.js";
+import { ProjectAssetTypeMaterial } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeMaterial.js";
 import { createMockDependencies } from "./shared.js";
 import { Material, Vec3 } from "../../../../../../src/mod.js";
 import { MaterialMap } from "../../../../../../src/rendering/MaterialMap.js";

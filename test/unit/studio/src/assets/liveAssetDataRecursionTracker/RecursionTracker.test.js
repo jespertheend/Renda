@@ -1,7 +1,7 @@
 import { assertSpyCall, assertSpyCalls, mockSessionAsync, spy, stub } from "std/testing/mock.ts";
 import { assertIsError } from "std/testing/asserts.ts";
 import { RecursionTracker } from "../../../../../../studio/src/assets/liveAssetDataRecursionTracker/RecursionTracker.js";
-import { ProjectAssetType } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js";
+import { ProjectAssetType } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js";
 import { createMockProjectAsset } from "../../../shared/createMockProjectAsset.js";
 
 const BASIC_ROOT_ASSET_UUID = "basic asset uuid";
@@ -23,8 +23,8 @@ class ExtendedProjectAssetType2 extends ProjectAssetType {
 
 /**
  * @param {object} options
- * @param {import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeConstructorAny?} [options.rootProjectAssetTypeConstructor]
- * @param {import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeConstructorAny?} [options.otherProjectAssetTypeConstructor]
+ * @param {import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetTypeConstructorAny?} [options.rootProjectAssetTypeConstructor]
+ * @param {import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetTypeConstructorAny?} [options.otherProjectAssetTypeConstructor]
  */
 function basicSetup({
 	rootProjectAssetTypeConstructor = null,

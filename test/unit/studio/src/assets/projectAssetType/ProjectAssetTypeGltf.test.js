@@ -1,5 +1,5 @@
 import "../../../shared/initializeStudio.js";
-import { ProjectAssetTypeGltf } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeGltf.js";
+import { ProjectAssetTypeGltf } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeGltf.js";
 import { createMockDependencies } from "./shared.js";
 import { assertExists, assertRejects } from "std/testing/asserts.ts";
 

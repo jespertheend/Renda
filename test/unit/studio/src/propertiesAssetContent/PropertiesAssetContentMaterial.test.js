@@ -8,7 +8,7 @@ import { MaterialMap } from "../../../../../src/rendering/MaterialMap.js";
 import { Importer } from "fake-imports";
 import { castTreeView } from "../../shared/mockTreeView/castTreeView.js";
 import { waitForMicrotasks } from "../../../../../src/util/waitForMicroTasks.js";
-import { MATERIAL_MAP_PERSISTENCE_KEY } from "../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeMaterial.js";
+import { MATERIAL_MAP_PERSISTENCE_KEY } from "../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeMaterial.js";
 import { Texture } from "../../../../../src/core/Texture.js";
 
 const DEFAULT_ASSET_MAP_UUID = "default-asset-map-uuid";

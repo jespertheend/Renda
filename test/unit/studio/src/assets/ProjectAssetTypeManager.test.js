@@ -1,17 +1,19 @@
 import { assertEquals, assertExists, assertStrictEquals, assertThrows } from "std/testing/asserts.ts";
 import "../../shared/initializeStudio.js";
 import { ProjectAssetTypeManager } from "../../../../../studio/src/assets/ProjectAssetTypeManager.js";
-import { ProjectAssetType } from "../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js";
 
 const BASIC_UUID = "00000000-0000-0000-0000-000000000000";
 const BASIC_UUID2 = "00000000-0000-0000-0000-000000000001";
 const BASIC_ASSET_TYPE = "namespace:type";
 const BASIC_ASSET_TYPE2 = "namespace:type2";
 
-/** @extends {ProjectAssetType<any, any, any, any>} */
-class ExtendedProjectAssetType extends ProjectAssetType {
-	static type = BASIC_ASSET_TYPE;
-	static typeUuid = BASIC_UUID;
+function createBasicProjectAssetType() {
+	/** @type {import("../../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} */
+	const projectAssetType = {
+		type: BASIC_ASSET_TYPE,
+		typeUuid: BASIC_UUID,
+	};
+	return projectAssetType;
 }
 
 Deno.test({
@@ -27,27 +29,13 @@ Deno.test({
 });
 
 Deno.test({
-	name: "registering an asset type with an incorrect constructor type throws",
-	fn() {
-		const manager = new ProjectAssetTypeManager();
-
-		assertThrows(() => {
-			manager.registerAssetType(/** @type {any} */ ({}));
-		}, Error, "Tried to register project asset type (undefined) that does not extend ProjectAssetType class.");
-	},
-});
-
-Deno.test({
 	name: "registering an asset type with a missing 'type' property throws",
 	fn() {
 		const manager = new ProjectAssetTypeManager();
 
-		/** @extends {ProjectAssetType<any, any, any, any>} */
-		class ExtendedProjectAssetType extends ProjectAssetType {}
-
 		assertThrows(() => {
-			manager.registerAssetType(ExtendedProjectAssetType);
-		}, Error, "Tried to register project asset type (ExtendedProjectAssetType) with no type value, override the static type value in order for this asset type to function properly.");
+			manager.registerAssetType(/** @type {import("../../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} */ (/** @type {unknown} */ ({})));
+		}, Error, "Tried to register a project asset type without a type property.");
 	},
 });
 
@@ -56,28 +44,29 @@ Deno.test({
 	fn() {
 		const manager = new ProjectAssetTypeManager();
 
-		const wrongTypes = [
-			"missingcolon",
-			":nonamespace",
-			// "notype:",
-		];
-
-		for (const typeStr of wrongTypes) {
-			/** @extends {ProjectAssetType<any, any, any, any>} */
-			class ExtendedProjectAssetType extends ProjectAssetType {
-				static type = typeStr;
-				static typeUuid = BASIC_UUID;
-			}
-
-			assertThrows(() => {
-				manager.registerAssetType(ExtendedProjectAssetType);
-			}, Error, "Tried to register project asset type (ExtendedProjectAssetType) without a namespace in the type value.");
-		}
+		assertThrows(() => {
+			manager.registerAssetType({
+				type: "missingColon",
+				typeUuid: "",
+			});
+		}, Error, `Tried to register project asset type with an invalid format: "missingColon". The 'type' property should have the format "namespace:identifier". For example: "renda:mesh".`);
+		assertThrows(() => {
+			manager.registerAssetType({
+				type: ":noNamespace",
+				typeUuid: "",
+			});
+		}, Error, `Tried to register project asset type with an invalid format: ":noNamespace". The 'type' property should have the format "namespace:identifier". For example: "renda:mesh".`);
+		assertThrows(() => {
+			manager.registerAssetType({
+				type: "noType:",
+				typeUuid: "",
+			});
+		}, Error, `Tried to register project asset type with an invalid format: "noType:". The 'type' property should have the format "namespace:identifier". For example: "renda:mesh".`);
 	},
 });
 
 Deno.test({
-	name: "registering an asset type with a missing 'typeUuid' property throws",
+	name: "registering an asset type with a wrong 'typeUuid' property throws",
 	fn() {
 		const manager = new ProjectAssetTypeManager();
 
@@ -87,16 +76,14 @@ Deno.test({
 			"also-not-an-uuid",
 		];
 
-		for (const wrongUuid of wrongUuids) {
-			/** @extends {ProjectAssetType<any, any, any, any>} */
-			class ExtendedProjectAssetType extends ProjectAssetType {
-				static type = BASIC_ASSET_TYPE;
-				static typeUuid = wrongUuid;
-			}
-
+		for (const [i, wrongUuid] of wrongUuids.entries()) {
+			const type = "namespace:type" + i;
 			assertThrows(() => {
-				manager.registerAssetType(ExtendedProjectAssetType);
-			}, Error, "Tried to register project asset type (ExtendedProjectAssetType) without a valid typeUuid, override the static typeUuid value in order for this asset type to function properly.");
+				manager.registerAssetType({
+					type,
+					typeUuid: /** @type {import("../../../../../src/mod.js").UuidString} */ (wrongUuid),
+				});
+			}, Error, `Tried to register project asset type ("${type}") without a valid 'typeUuid' property.`);
 		}
 	},
 });
@@ -105,11 +92,12 @@ Deno.test({
 	name: "getAssetType() by identifier",
 	fn() {
 		const manager = new ProjectAssetTypeManager();
-		manager.registerAssetType(ExtendedProjectAssetType);
+		const projectAssetType = createBasicProjectAssetType();
+		manager.registerAssetType(projectAssetType);
 
 		const result = manager.getAssetType(BASIC_ASSET_TYPE);
 
-		assertStrictEquals(result, ExtendedProjectAssetType);
+		assertStrictEquals(result, projectAssetType);
 	},
 });
 
@@ -128,7 +116,7 @@ Deno.test({
 	name: "getAssetTypeIds()",
 	fn() {
 		const manager = new ProjectAssetTypeManager();
-		manager.registerAssetType(ExtendedProjectAssetType);
+		manager.registerAssetType(createBasicProjectAssetType());
 
 		const result = Array.from(manager.getAssetTypeIds());
 		assertEquals(result, [BASIC_ASSET_TYPE]);
@@ -139,11 +127,12 @@ Deno.test({
 	name: "getAssetTypeByUuid()",
 	fn() {
 		const manager = new ProjectAssetTypeManager();
-		manager.registerAssetType(ExtendedProjectAssetType);
+		const projectAssetType = createBasicProjectAssetType();
+		manager.registerAssetType(projectAssetType);
 
 		const result = manager.getAssetTypeByUuid(BASIC_UUID);
 
-		assertStrictEquals(result, ExtendedProjectAssetType);
+		assertStrictEquals(result, projectAssetType);
 	},
 });
 

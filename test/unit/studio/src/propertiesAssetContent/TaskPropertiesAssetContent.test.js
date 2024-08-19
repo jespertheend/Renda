@@ -56,7 +56,7 @@ function basicSetup({
 	});
 	const assetContent = new PropertiesAssetContentTask(studio);
 
-	/** @type {import("../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeTask.js").TaskProjectAssetDiskData} */
+	/** @type {import("../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeTask.js").TaskProjectAssetDiskData} */
 	const readAssetDataReturnValue = {
 		taskType: "namespace:tasktype",
 	};

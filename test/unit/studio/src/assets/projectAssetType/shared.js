@@ -74,7 +74,7 @@ export function getMockRecursionTracker() {
  * - deserializing it again to an object
  * - handling that data in the respective AssetLoaderType which turns it into an instance of a class.
  * @param {object} options
- * @param {import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeConstructorAny} options.ProjectAssetTypeConstructor
+ * @param {import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetTypeConstructorAny} options.ProjectAssetTypeConstructor
  * @param {typeof import("../../../../../../src/assets/assetLoaderTypes/AssetLoaderType.js").AssetLoaderType<any, any>} options.AssetLoaderType
  * @param {any} [options.jsonFileData]
  */
@@ -83,7 +83,7 @@ export async function serializeAndLoad({
 	AssetLoaderType,
 	jsonFileData,
 }) {
-	const castConstructor = /** @type {typeof import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetType} */ (ProjectAssetTypeConstructor);
+	const castConstructor = /** @type {typeof import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType} */ (ProjectAssetTypeConstructor);
 
 	const mockAssetManager = /** @type {import("../../../../../../studio/src/assets/AssetManager.js").AssetManager} */ ({
 		resolveDefaultAssetLinkUuid(uuid) {

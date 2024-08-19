@@ -76,7 +76,7 @@ Deno.test({
 	async fn() {
 		const { projectAsset, uninstall } = basicSetup();
 		try {
-			/** @type {import("std/testing/mock.ts").Spy<any, [import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").LiveAssetDataAny], void>} */
+			/** @type {import("std/testing/mock.ts").Spy<any, [import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").LiveAssetDataAny], void>} */
 			const dataChangeSpy = spy();
 			projectAsset.onLiveAssetDataChange(dataChangeSpy);
 

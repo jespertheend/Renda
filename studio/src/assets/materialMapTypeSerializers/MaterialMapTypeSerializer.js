@@ -16,7 +16,7 @@ import { StorageType, objectToBinary } from "../../../../src/util/binarySerializ
  * @typedef MaterialMapLiveAssetDataContext
  * @property {import("../../Studio.js").Studio} studio
  * @property {import("../AssetManager.js").AssetManager} assetManager
- * @property {import("../ProjectAsset.js").ProjectAsset<import("../projectAssetType/ProjectAssetTypeMaterialMap.js").ProjectAssetTypeMaterialMap>} materialMapAsset
+ * @property {import("../ProjectAsset.js").ProjectAsset<import("../projectAssetTypes/materialMap.js").materialMapProjectAssetType>} materialMapAsset
  */
 
 /**

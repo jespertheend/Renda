@@ -7,7 +7,7 @@ import { getProjectSelectorInstance } from "../../projectSelector/projectSelecto
 /**
  * @typedef {object} DraggingProjectAssetData
  * @property {boolean} dataPopulated
- * @property {typeof import("../../assets/projectAssetType/ProjectAssetType.js").ProjectAssetType?} assetType Is null when data hasn't been populated yet.
+ * @property {typeof import("../../assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType?} assetType Is null when data hasn't been populated yet.
  * @property {import("../../../../src/util/mod.js").UuidString?} assetUuid Is null when data hasn't been populated yet.
  */
 
@@ -107,7 +107,7 @@ export class ContentWindowProject extends ContentWindow {
 									onClick: async () => {
 										const asset = await this.createAsset("renda:task");
 										/**
-										 * @type {import("../../assets/projectAssetType/ProjectAssetTypeTask.js").TaskProjectAssetDiskData}
+										 * @type {import("../../assets/projectAssetTypes/ProjectAssetTypeTask.js").TaskProjectAssetDiskData}
 										 */
 										const fileData = {
 											taskType: taskType.type,

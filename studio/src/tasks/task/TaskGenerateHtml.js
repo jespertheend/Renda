@@ -1,4 +1,5 @@
-import { ProjectAssetTypeHtml } from "../../assets/projectAssetType/ProjectAssetTypeHtml.js";
+// import { ProjectAssetTypeHtml } from "../../assets/projectAssetTypes/ProjectAssetTypeHtml.js";
+import { htmlProjectAssetType } from "../../assets/projectAssetTypes/html.js";
 import { createTreeViewStructure } from "../../ui/propertiesTreeView/createStructureHelpers.js";
 import { Task } from "./Task.js";
 
@@ -30,7 +31,7 @@ export class TaskGenerateHtml extends Task {
 		template: {
 			type: "droppable",
 			guiOpts: {
-				supportedAssetTypes: [ProjectAssetTypeHtml],
+				supportedAssetTypes: [htmlProjectAssetType],
 			},
 		},
 		replacements: {

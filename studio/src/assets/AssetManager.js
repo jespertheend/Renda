@@ -19,15 +19,15 @@ import { EntityAssetManager } from "./EntityAssetManager.js";
  */
 
 /**
- * @template {new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} [TAssetType = new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny]
+ * @template {new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny} [TAssetType = new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny]
  * @template {boolean} [TAssertExists = boolean]
  * @typedef AssetAssertionOptions
- * @property {TAssetType | TAssetType[] | null} [assertAssetType]
+ * @property {keyof import("./ProjectAssetTypeManager.js").ProjectAssetTypesByType | (keyof import("./ProjectAssetTypeManager.js").ProjectAssetTypesByType)[] | null} [assertAssetType]
  * @property {TAssertExists} [assertExists]
  */
 
 /**
- * @template {new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} [TAssetType = new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny]
+ * @template {new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny} [TAssetType = new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny]
  * @template {boolean} [TAssertExists = boolean]
  * @typedef GetLiveAssetAssertionOptions
  * @property {TAssetType | TAssetType[]} assertAssetType
@@ -55,21 +55,19 @@ import { EntityAssetManager } from "./EntityAssetManager.js";
  */
 
 /**
- * @typedef {GetLiveAssetAssertionOptions<new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny> & GetLiveAssetFromUuidOrEmbeddedAssetDataExtraOptions} GetLiveAssetFromUuidOrEmbeddedAssetDataOptions
+ * @typedef {GetLiveAssetAssertionOptions<new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny> & GetLiveAssetFromUuidOrEmbeddedAssetDataExtraOptions} GetLiveAssetFromUuidOrEmbeddedAssetDataOptions
  */
 
 /**
  * @template {AssetAssertionOptions} [T = AssetAssertionOptionsDefaults]
- * @typedef {T["assertAssetType"] extends (new (...args: any[]) => infer ProjectAssetType) ?
- * 	ProjectAssetType :
- * T["assertAssetType"] extends (new (...args: any[]) => infer ProjectAssetType)[] ?
- * 	ProjectAssetType :
- * import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeUnknown} AssetAssertionOptionsToProjectAssetType
+ * @typedef {T["assertAssetType"] extends keyof import("./ProjectAssetTypeManager.js").ProjectAssetTypesByType ?
+ * 	import("./ProjectAssetTypeManager.js").ProjectAssetTypesByType[T["assertAssetType"]] :
+ * import("./ProjectAssetTypeManager.js").ProjectAssetTypeUnknown} AssetAssertionOptionsToProjectAssetType
  */
 
 /**
  * @template {AssetAssertionOptions} [T = AssetAssertionOptionsDefaults]
- * @typedef {AssetAssertionOptionsToProjectAssetType<T> extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny ?
+ * @typedef {AssetAssertionOptionsToProjectAssetType<T> extends import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny ?
  *	T["assertExists"] extends true ?
  * 		import("./ProjectAsset.js").ProjectAsset<AssetAssertionOptionsToProjectAssetType<T>> :
  * 		import("./ProjectAsset.js").ProjectAsset<AssetAssertionOptionsToProjectAssetType<T>>? :
@@ -79,8 +77,8 @@ import { EntityAssetManager } from "./EntityAssetManager.js";
 /**
  * @template {AssetAssertionOptions} T
  * @typedef {AssetAssertionOptionsToProjectAsset<T> extends infer ProjectAsset ?
- * 	ProjectAsset extends import("./ProjectAsset.js").ProjectAsset<infer TProjectAssetType extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny> ?
- * 		TProjectAssetType extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetType<infer TLiveAsset, any, any, any> ?
+ * 	ProjectAsset extends import("./ProjectAsset.js").ProjectAsset<infer TProjectAssetType extends import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny> ?
+ * 		TProjectAssetType extends import("./ProjectAssetTypeManager.js").ProjectAssetType<infer TLiveAsset, any, any, any> ?
  * 			TLiveAsset :
  * 			never :
  * 		never :
@@ -97,8 +95,8 @@ import { EntityAssetManager } from "./EntityAssetManager.js";
 /**
  * @template {AssetAssertionOptions} T
  * @typedef {AssetAssertionOptionsToProjectAsset<T> extends infer ProjectAsset ?
- * 	ProjectAsset extends import("./ProjectAsset.js").ProjectAsset<infer ProjectAssetType extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny> ?
- * 		ProjectAssetType extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetType<any, any, infer TFileData extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetDiskDataType, any> ?
+ * 	ProjectAsset extends import("./ProjectAsset.js").ProjectAsset<infer ProjectAssetType extends import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny> ?
+ * 		ProjectAssetType extends import("./ProjectAssetTypeManager.js").ProjectAssetType<any, any, infer TFileData extends import("./ProjectAssetTypeManager.js").ProjectAssetDiskDataType, any> ?
  * 			TFileData :
  * 			never :
  * 		never :
@@ -217,7 +215,7 @@ export class AssetManager {
 			if (json) {
 				if (json.assets) {
 					for (const [uuid, assetData] of Object.entries(json.assets)) {
-						const projectAsset = await ProjectAsset.guessAssetTypeAndCreate(this, this.projectAssetTypeManager, this.builtInAssetManager, this.fileSystem, { uuid, ...assetData });
+						const projectAsset = this.projectAssetFactory({ uuid, ...assetData });
 						if (projectAsset) {
 							projectAsset.makeUuidPersistent();
 							this.projectAssets.set(uuid, projectAsset);
@@ -304,7 +302,8 @@ export class AssetManager {
 		const assets = {};
 		for (const [uuid, projectAsset] of this.projectAssets) {
 			if (projectAsset.needsAssetSettingsSave) {
-				assets[uuid] = projectAsset.toJson();
+				throw new Error("not yet implemented");
+				// todo: save asset path, asset type, and asset settings
 				hasAssets = true;
 			}
 		}
@@ -396,12 +395,10 @@ export class AssetManager {
 	/**
 	 * @param {string[]} path
 	 * @param {string?} assetType
-	 * @param {boolean} forceAssetType
 	 */
-	async registerAsset(path, assetType = null, forceAssetType = false) {
+	async registerAsset(path, assetType = null) {
 		await this.loadAssetSettings(true);
 		const projectAsset = this.projectAssetFactory({ path, assetType, forceAssetType });
-		await projectAsset.waitForInit();
 		this.projectAssets.set(projectAsset.uuid, projectAsset);
 		if (projectAsset.needsAssetSettingsSave) {
 			this.saveAssetSettings();
@@ -558,11 +555,11 @@ export class AssetManager {
 
 	/**
 	 * Check if the provided project asset type is of a specific type and throws an error if it isn't.
-	 * @param {typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType?} projectAssetTypeConstructor
-	 * @param {(new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny) | (new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny)[]} expectedType
+	 * @param {typeof import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny} projectAssetTypeConstructor
+	 * @param {(new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny) | (new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny)[]} expectedType
 	 */
 	static assertProjectAssetIsType(projectAssetTypeConstructor, expectedType) {
-		let castExpectedTypes = /** @type {(typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType) | (typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType)[]} */ (expectedType);
+		let castExpectedTypes = /** @type {(typeof import("./ProjectAssetTypeManager.js").ProjectAssetType) | (typeof import("./ProjectAssetTypeManager.js").ProjectAssetType)[]} */ (expectedType);
 		if (!Array.isArray(castExpectedTypes)) {
 			castExpectedTypes = [castExpectedTypes];
 		}
@@ -792,7 +789,7 @@ export class AssetManager {
 	 * accessible through their liveAsset. Embedded ProjectAsset instances are
 	 * garbage collected when their liveAsset is garbage collected.
 	 *
-	 * @param {import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeIdentifier | typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType} assetType
+	 * @param {import("./ProjectAssetTypeManager.js").ProjectAssetTypeIdentifier | import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny} assetType
 	 * @param {import("./ProjectAsset.js").ProjectAssetAny} parent
 	 * @param {unknown} persistenceKey
 	 */
@@ -883,7 +880,7 @@ export class AssetManager {
 	/**
 	 * @private
 	 * @param {import("../../../src/mod.js").UuidString | object | null | undefined} uuidOrData
-	 * @param {(new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny) | (new (...args: any[]) => import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny)[]} assertAssetType
+	 * @param {(new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny) | (new (...args: any[]) => import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny)[]} assertAssetType
 	 * @param {import("./ProjectAsset.js").ProjectAssetAny} parentAsset
 	 * @param {unknown} embeddedAssetPersistenceKey
 	 */
@@ -895,7 +892,7 @@ export class AssetManager {
 			return this.getProjectAssetForLiveAsset(previousLiveAsset);
 		}
 
-		let castAssertAssetTypeSingle = /** @type {(typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType) | (typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType)[]} */ (assertAssetType);
+		let castAssertAssetTypeSingle = /** @type {(typeof import("./ProjectAssetTypeManager.js").ProjectAssetType) | (typeof import("./ProjectAssetTypeManager.js").ProjectAssetType)[]} */ (assertAssetType);
 		if (Array.isArray(castAssertAssetTypeSingle)) {
 			if (castAssertAssetTypeSingle.length == 0) {
 				throw new Error("Failed to create embedded asset, `assertAssetType` is an empty array.");

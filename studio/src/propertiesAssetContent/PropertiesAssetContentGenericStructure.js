@@ -22,7 +22,7 @@ export class PropertiesAssetContentGenericStructure extends PropertiesAssetConte
 
 	/**
 	 * @param {import("../ui/propertiesTreeView/types.ts").PropertiesTreeViewStructure} structure
-	 * @param {import("../assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny?} assetType
+	 * @param {import("../assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny?} assetType
 	 */
 	setStructure(structure, assetType) {
 		if (this.structure) {
@@ -31,7 +31,7 @@ export class PropertiesAssetContentGenericStructure extends PropertiesAssetConte
 		this.structure = structure;
 		let uiName = "Asset Properties";
 		if (assetType) {
-			const castConstructor = /** @type {typeof import("../assets/projectAssetType/ProjectAssetType.js").ProjectAssetType} */ (assetType.constructor);
+			const castConstructor = /** @type {typeof import("../assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} */ (assetType.constructor);
 			uiName = castConstructor.getUiName();
 		}
 		this.assetTreeView.name = uiName;

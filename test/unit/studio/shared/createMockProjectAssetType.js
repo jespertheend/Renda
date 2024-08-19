@@ -10,7 +10,7 @@
  * @property {string} studioStr
  */
 
-/** @typedef {import("../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetType<MockProjectAssetTypeLiveAsset, MockProjectAssetTypeStudioData, MockProjectAssetTypeDiskData>} MockProjectAssetType */
+/** @typedef {import("../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType<MockProjectAssetTypeLiveAsset, MockProjectAssetTypeStudioData, MockProjectAssetTypeDiskData>} MockProjectAssetType */
 
 class MockProjectAssetTypeLiveAsset {
 	constructor() {
@@ -20,7 +20,7 @@ class MockProjectAssetTypeLiveAsset {
 }
 
 /**
- * @param {import("../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeIdentifier} type
+ * @param {import("../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeIdentifier} type
  */
 export function createMockProjectAssetType(type) {
 	class MockProjectAssetType {
@@ -41,7 +41,7 @@ export function createMockProjectAssetType(type) {
 		/**
 		 * @param {MockProjectAssetTypeDiskData?} fileData
 		 * @param {import("../../../../studio/src/assets/liveAssetDataRecursionTracker/RecursionTracker.js").RecursionTracker} recursionTracker
-		 * @returns {Promise<import("../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").LiveAssetData<MockProjectAssetTypeLiveAsset, MockProjectAssetTypeStudioData>>}
+		 * @returns {Promise<import("../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").LiveAssetData<MockProjectAssetTypeLiveAsset, MockProjectAssetTypeStudioData>>}
 		 */
 		async getLiveAssetData(fileData, recursionTracker) {
 			if (!fileData) {
@@ -79,7 +79,7 @@ export function createMockProjectAssetType(type) {
 	}
 
 	const castUnknown = /** @type {unknown} */ (MockProjectAssetType);
-	const castProjectAssetType = /** @type {typeof import("../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetType} */ (castUnknown);
+	const castProjectAssetType = /** @type {typeof import("../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType} */ (castUnknown);
 
 	return {
 		MockProjectAssetTypeLiveAsset,

@@ -1,10 +1,10 @@
 import { PropertiesAssetContent } from "./PropertiesAssetContent.js";
 import { Mesh, VertexState } from "../../../src/mod.js";
 import { createTreeViewStructure } from "../ui/propertiesTreeView/createStructureHelpers.js";
-import { ProjectAssetTypeVertexState } from "../assets/projectAssetType/ProjectAssetTypeVertexState.js";
+import { vertexStateProjectAssetType } from "../assets/projectAssetTypes/vertexState.js";
 
 /**
- * @extends {PropertiesAssetContent<import("../assets/projectAssetType/ProjectAssetTypeMesh.js").ProjectAssetTypeMesh>}
+ * @extends {PropertiesAssetContent<import("../assets/projectAssetTypes/mesh.js").meshProjectAssetType>}
  */
 export class PropertiesAssetContentMesh extends PropertiesAssetContent {
 	/**
@@ -71,7 +71,7 @@ export class PropertiesAssetContentMesh extends PropertiesAssetContent {
 			studioData.vertexStateUuid = settings.vertexState;
 			const assetManager = this.studioInstance.projectManager.assertAssetManagerExists();
 			const vertexStateLiveAsset = await assetManager.getLiveAsset(settings.vertexState, {
-				assertAssetType: ProjectAssetTypeVertexState,
+				assertAssetType: vertexStateProjectAssetType,
 			});
 			liveAsset.setVertexState(vertexStateLiveAsset);
 			await asset.saveLiveAssetData();

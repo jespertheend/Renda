@@ -1,8 +1,8 @@
 import { ContentWindow } from "../ContentWindow.js";
 import { Button } from "../../../ui/Button.js";
 import { CameraComponent, ClusteredLightsConfig, Entity, GizmoManager, Mat4, Material, MeshComponent, OrbitControls, Quat, TranslationGizmo, Vec3, VertexState, createPlane } from "../../../../../src/mod.js";
-import { ProjectAssetTypeEntity } from "../../../assets/projectAssetType/ProjectAssetTypeEntity.js";
-import { ProjectAssetTypeGltf } from "../../../assets/projectAssetType/ProjectAssetTypeGltf.js";
+// import { ProjectAssetTypeEntity } from "../../../assets/projectAssetTypes/ProjectAssetTypeEntity.js";
+// import { ProjectAssetTypeGltf } from "../../../assets/projectAssetTypes/ProjectAssetTypeGltf.js";
 import { RotationGizmo } from "../../../../../src/gizmos/gizmos/RotationGizmo.js";
 import { ButtonGroup } from "../../../ui/ButtonGroup.js";
 import { ButtonSelectorGui } from "../../../ui/ButtonSelectorGui.js";

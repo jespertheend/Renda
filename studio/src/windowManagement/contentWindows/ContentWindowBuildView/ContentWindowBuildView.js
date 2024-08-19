@@ -3,8 +3,8 @@ import { Button } from "../../../ui/Button.js";
 import { ButtonGroup } from "../../../ui/ButtonGroup.js";
 import { EntryPointPopover, getSelectedScriptEntryPoint } from "./EntryPointPopover.js";
 import { TypedMessenger } from "../../../../../src/util/TypedMessenger/TypedMessenger.js";
-import { ProjectAssetTypeJavascript } from "../../../assets/projectAssetType/ProjectAssetTypeJavascript.js";
-import { ProjectAssetTypeHtml } from "../../../assets/projectAssetType/ProjectAssetTypeHtml.js";
+// import { ProjectAssetTypeJavascript } from "../../../assets/projectAssetTypes/ProjectAssetTypeJavascript.js";
+// import { ProjectAssetTypeHtml } from "../../../assets/projectAssetTypes/ProjectAssetTypeHtml.js";
 import { PopoverToggleButton } from "../../../ui/popoverMenus/PopoverToggleButton.js";
 
 /**

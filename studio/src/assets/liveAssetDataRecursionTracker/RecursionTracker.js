@@ -25,20 +25,20 @@ import { LoadingAsset } from "./LoadingAsset.js";
 /* eslint-enable jsdoc/require-description-complete-sentence */
 
 /**
- * @typedef {import("../AssetManager.js").AssetAssertionOptions<new (...args: any[]) => import("../projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny> & GetLiveAssetDataOptionsExtra} GetLiveAssetDataOptions
+ * @typedef {import("../AssetManager.js").AssetAssertionOptions<new (...args: any[]) => import("../ProjectAssetTypeManager.js").ProjectAssetTypeAny> & GetLiveAssetDataOptionsExtra} GetLiveAssetDataOptions
  */
 
 /**
  * @template {GetLiveAssetDataOptions} TOpts
- * @typedef {TOpts extends import("../projectAssetType/ProjectAssetType.js").ProjectAssetType<infer U, any, any> ? U :never} LiveAssetType
+ * @typedef {TOpts extends import("../ProjectAssetTypeManager.js").ProjectAssetType<infer U, any, any> ? U :never} LiveAssetType
  */
 /**
  * @template {GetLiveAssetDataOptions} TOpts
- * @typedef {TOpts extends import("../projectAssetType/ProjectAssetType.js").ProjectAssetType<any, infer U, any> ? U :never} StudioDataType
+ * @typedef {TOpts extends import("../ProjectAssetTypeManager.js").ProjectAssetType<any, infer U, any> ? U :never} StudioDataType
  */
 /**
  * @template {GetLiveAssetDataOptions} TOpts
- * @typedef {import("../projectAssetType/ProjectAssetType.js").LiveAssetData<LiveAssetType<TOpts>, StudioDataType<TOpts>>} LiveAssetData
+ * @typedef {import("../ProjectAssetTypeManager.js").LiveAssetData<LiveAssetType<TOpts>, StudioDataType<TOpts>>} LiveAssetData
  */
 
 /**

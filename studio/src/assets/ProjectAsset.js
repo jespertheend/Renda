@@ -18,10 +18,7 @@ import { AssetManager } from "./AssetManager.js";
 /**
  * @typedef {object} ProjectAssetOptions
  * @property {import("../../../src/util/mod.js").UuidString} uuid
- * @property {string[]} [path]
  * @property {*} [assetSettings]
- * @property {import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeIdentifier?} [assetType]
- * @property {boolean} [forceAssetType]
  * @property {boolean} [isBuiltIn]
  * @property {ProjectAssetAny?} [embeddedParent] When set, marks the created asset as embedded asset and assigns the
  * provided asset as parent.
@@ -36,7 +33,7 @@ import { AssetManager } from "./AssetManager.js";
  * @property {object} [assetSettings]
  */
 
-/** @typedef {(liveAssetData: import("./projectAssetType/ProjectAssetType.js").LiveAssetData<any, any>) => void} LiveAssetDataChangeCallbackAny */
+/** @typedef {(liveAssetData: import("./ProjectAssetTypeManager.js").LiveAssetData<any, any>) => void} LiveAssetDataChangeCallbackAny */
 
 /** @typedef {string | BufferSource | Blob | File | null} GetBundledAssetDataReturnType */
 
@@ -45,14 +42,14 @@ import { AssetManager } from "./AssetManager.js";
  * Live asset creation/destruction is also managed from this class.
  * The specifics of handling different types of assets is implemented from
  * extended `ProjectAssetType` classes.
- * @template {import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} T
+ * @template {import("./ProjectAssetTypeManager.js").ProjectAssetTypeAny} T
  */
 export class ProjectAsset {
-	/** @typedef {T extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetType<infer U, any, any, any> ? U :never} LiveAssetType */
-	/** @typedef {T extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetType<any, infer U, any, any> ? U :never} StudioDataType */
-	/** @typedef {T extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetType<any, any, infer U  extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetDiskDataType, any> ? U :never} FileDataType */
-	/** @typedef {T extends import("./projectAssetType/ProjectAssetType.js").ProjectAssetType<any, any, any, infer U> ? U :never} AssetSettigsType */
-	/** @typedef {import("./projectAssetType/ProjectAssetType.js").LiveAssetData<LiveAssetType, StudioDataType>} TLiveAssetData */
+	/** @typedef {T extends import("./ProjectAssetTypeManager.js").ProjectAssetType<infer U, any, any, any> ? U :never} LiveAssetType */
+	/** @typedef {T extends import("./ProjectAssetTypeManager.js").ProjectAssetType<any, infer U, any, any> ? U :never} StudioDataType */
+	/** @typedef {T extends import("./ProjectAssetTypeManager.js").ProjectAssetType<any, any, infer U  extends import("./ProjectAssetTypeManager.js").ProjectAssetDiskDataType, any> ? U :never} FileDataType */
+	/** @typedef {T extends import("./ProjectAssetTypeManager.js").ProjectAssetType<any, any, any, infer U> ? U :never} AssetSettigsType */
+	/** @typedef {import("./ProjectAssetTypeManager.js").LiveAssetData<LiveAssetType, StudioDataType>} TLiveAssetData */
 	/** @typedef {(liveAssetData: TLiveAssetData) => void} LiveAssetDataChangeCallback */
 	/**
 	 * @typedef LiveAssetDataChangePromise
@@ -78,10 +75,7 @@ export class ProjectAsset {
 	 */
 	constructor(assetManager, assetTypeManager, builtInAssetManager, fileSystem, {
 		uuid,
-		path = [],
 		assetSettings = {},
-		assetType = null,
-		forceAssetType = false,
 		isBuiltIn = false,
 		embeddedParent = null,
 		embeddedParentPersistenceKey = "",
@@ -101,11 +95,9 @@ export class ProjectAsset {
 
 		/** @type {import("../../../src/util/mod.js").UuidString} */
 		this.uuid = uuid;
-		/** @type {string[]}*/
-		this.path = path;
 		/** @type {AssetSettigsType} */
 		this.assetSettings = assetSettings;
-		/** @type {import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeIdentifier | null} */
+		/** @type {import("./ProjectAssetTypeManager.js").ProjectAssetTypeIdentifier | null} */
 		this.assetType = assetType;
 		this.forceAssetType = forceAssetType;
 		this.needsPersistentUuid = false;
@@ -133,9 +125,6 @@ export class ProjectAsset {
 		this.embeddedParentPersistenceKey = embeddedParentPersistenceKey;
 		/** @private @type {Map<string, WeakRef<Object>>} */
 		this.previousLiveAssets = new Map();
-
-		this.initInstance = new SingleInstancePromise(async () => await this.init(), { once: true });
-		this.initInstance.run();
 
 		this.#writeAssetDataInstance = new SingleInstancePromise(this.#writeAssetDataImpl);
 
@@ -169,40 +158,6 @@ export class ProjectAsset {
 		this.clearRecursionTrackerLiveAssetChangeHandlers();
 	}
 
-	async init() {
-		if (!this.assetType) {
-			try {
-				this.assetType = await ProjectAsset.guessAssetTypeFromFile(this.builtInAssetManager, this.assetTypeManager, this.fileSystem, this.path, this.isBuiltIn);
-			} catch (e) {
-				this.assetType = null;
-			}
-		}
-		if (this.destructed) return;
-
-		if (this.assetType) {
-			const AssetTypeConstructor = this.assetTypeManager.getAssetType(this.assetType);
-			if (AssetTypeConstructor) {
-				const projectAssetType = new AssetTypeConstructor(getStudioInstance(), this, this.assetManager, this.assetTypeManager);
-				/* eslint-disable jsdoc/no-undefined-types */
-				const castProjectAssetType = /** @type {T} */ (projectAssetType);
-				/* eslint-enable jsdoc/no-undefined-types */
-				this._projectAssetType = castProjectAssetType;
-			}
-		}
-	}
-
-	/**
-	 * This might be null if the asset hasn't been initialized yet, since the
-	 * asset type needs to be read from disk. If you want to be sure that the
-	 * asset type is loaded, use {@linkcode getProjectAssetTypeConstructor} instead.
-	 */
-	get projectAssetTypeConstructorSync() {
-		if (!this._projectAssetType) {
-			return null;
-		}
-		return /** @type {typeof import("./projectAssetType/ProjectAssetType.js").ProjectAssetType} */ (this._projectAssetType.constructor);
-	}
-
 	async waitForInit() {
 		await this.initInstance.run();
 	}
@@ -219,46 +174,12 @@ export class ProjectAsset {
 
 	/**
 	 * Asserts that this asset is of the specified ProjectAssetType.
-	 * Unfortunately it is not possible to have a asynchronous version of this
-	 * function due to limitations with TypeScript assertions (https://github.com/microsoft/TypeScript/issues/34636).
-	 * So if you wish to use this in a async call, be sure to call {@linkcode waitForInit} first.
-	 * @template {import("./projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} T
-	 * @param {new (...args: any[]) => T} projectAssetTypeConstructor
+	 * @template {import("./ProjectAssetTypeManager.js").ProjectAssetTypeIdentifier} T
+	 * @param {T} type
 	 * @returns {asserts this is ProjectAsset<T>}
 	 */
-	assertIsAssetTypeSync(projectAssetTypeConstructor) {
-		AssetManager.assertProjectAssetIsType(this.projectAssetTypeConstructorSync, projectAssetTypeConstructor);
-	}
-
-	/**
-	 * @param {import("./AssetManager.js").AssetManager} assetManager
-	 * @param {import("./ProjectAssetTypeManager.js").ProjectAssetTypeManager} assetTypeManager
-	 * @param {import("./BuiltInAssetManager.js").BuiltInAssetManager} builtInAssetManager
-	 * @param {import("../util/fileSystems/StudioFileSystem.js").StudioFileSystem?} fileSystem
-	 * @param {ProjectAssetOptions} assetData
-	 */
-	static async guessAssetTypeAndCreate(assetManager, assetTypeManager, builtInAssetManager, fileSystem, assetData) {
-		if (!assetData.assetType) {
-			assetData.assetType = this.guessAssetTypeFromPath(assetTypeManager, assetData.path);
-			assetData.forceAssetType = false;
-		}
-		const projectAsset = new ProjectAsset(assetManager, assetTypeManager, builtInAssetManager, fileSystem, assetData);
-		return projectAsset;
-	}
-
-	/**
-	 * @param {import("./ProjectAssetTypeManager.js").ProjectAssetTypeManager} projectAssetTypeManager
-	 * @param {string[]} path
-	 */
-	static guessAssetTypeFromPath(projectAssetTypeManager, path = []) {
-		if (!path || path.length <= 0) return null;
-		const fileName = path[path.length - 1];
-		const { extension } = getNameAndExtension(fileName);
-		if (extension == "json" || !extension) return null;
-		for (const assetType of projectAssetTypeManager.getAssetTypesForExtension(extension)) {
-			return assetType.type;
-		}
-		return null;
+	assertIsAssetTypeSync(type) {
+		AssetManager.assertProjectAssetIsType(this.projectAssetTypeConstructorSync, type);
 	}
 
 	/**
@@ -284,10 +205,6 @@ export class ProjectAsset {
 		return json?.assetType || null;
 	}
 
-	get fileName() {
-		return this.path[this.path.length - 1];
-	}
-
 	get editable() {
 		return !this.isBuiltIn || this.builtInAssetManager.allowAssetEditing;
 	}
@@ -309,27 +226,6 @@ export class ProjectAsset {
 
 		// if asset settings contains at least one key it needs to be saved
 		return Object.keys(this.assetSettings).length > 0;
-	}
-
-	/**
-	 * @param {string[]} newPath
-	 */
-	assetMoved(newPath) {
-		this.path = newPath;
-	}
-
-	toJson() {
-		/** @type {ProjectAssetJsonData} */
-		const assetData = {
-			path: this.path,
-		};
-		if (this.forceAssetType && this.assetType) {
-			assetData.assetType = this.assetType;
-		}
-		if (Object.keys(this.assetSettings).length > 0) {
-			assetData.assetSettings = this.assetSettings;
-		}
-		return assetData;
 	}
 
 	/**

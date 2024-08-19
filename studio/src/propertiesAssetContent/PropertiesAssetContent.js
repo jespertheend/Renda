@@ -1,7 +1,7 @@
 import { PropertiesTreeView } from "../ui/propertiesTreeView/PropertiesTreeView.js";
 
 /**
- * @template {import("../assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} TAssetType
+ * @template {import("../assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} TAssetType
  */
 export class PropertiesAssetContent {
 	/**

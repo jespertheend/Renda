@@ -1,7 +1,7 @@
 import { assertEquals, assertExists, assertInstanceOf, assertStrictEquals } from "std/testing/asserts.ts";
 import { assertSpyCall, assertSpyCalls, returnsNext, spy, stub } from "std/testing/mock.ts";
 import "../../../shared/initializeStudio.js";
-import { ProjectAssetTypeEntity } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeEntity.js";
+import { ProjectAssetTypeEntity } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeEntity.js";
 import { createMockProjectAsset } from "../../../shared/createMockProjectAsset.js";
 import { Component, Entity, Mat4, MeshComponent } from "../../../../../../src/mod.js";
 import { createMockDependencies, getMockRecursionTracker } from "./shared.js";

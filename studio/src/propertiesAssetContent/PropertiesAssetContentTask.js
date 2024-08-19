@@ -21,7 +21,7 @@ export const environmentVariablesStructure = createTreeViewStructure({
 });
 
 /**
- * @extends {PropertiesAssetContent<import("../assets/projectAssetType/ProjectAssetTypeTask.js").ProjectAssetTypeTask>}
+ * @extends {PropertiesAssetContent<import("../assets/projectAssetTypes/task.js").taskProjectAssetType>}
  */
 export class PropertiesAssetContentTask extends PropertiesAssetContent {
 	/** @type {string?} */
@@ -117,7 +117,7 @@ export class PropertiesAssetContentTask extends PropertiesAssetContent {
 		if (!this.#currentSelectedTaskType) {
 			throw new Error("Assertion failed, no task type set.");
 		}
-		/** @type {import("../assets/projectAssetType/ProjectAssetTypeTask.js").TaskProjectAssetDiskData} */
+		/** @type {import("../assets/projectAssetTypes/task.js").TaskProjectAssetDiskData} */
 		const assetData = {
 			taskType: this.#currentSelectedTaskType,
 		};

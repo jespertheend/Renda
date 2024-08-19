@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects, assertStrictEquals } from "std/testing/asserts.ts";
-import { ProjectAssetType } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js";
+import { ProjectAssetType } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js";
 
 /**
  * @param {object} options

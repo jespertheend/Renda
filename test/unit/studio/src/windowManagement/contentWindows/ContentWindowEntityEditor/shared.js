@@ -32,7 +32,7 @@ export function basicTest() {
 		watchAsset(assetUuid, options, cb) {},
 	});
 	mockStudioInstance.scrollHardwareDetector = /** @type {import("../../../../../../../src/mod.js").ScrollHardwareDetector} */ ({});
-	/** @type {Map<string, import("../../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<import("../../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeUnknown>>} */
+	/** @type {Map<string, import("../../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<import("../../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetTypeUnknown>>} */
 	const getProjectAssetFromUuidResults = new Map();
 	const assetManager = /** @type {import("../../../../../../../studio/src/assets/AssetManager.js").AssetManager} */ ({
 		async getProjectAssetFromUuid(uuid) {

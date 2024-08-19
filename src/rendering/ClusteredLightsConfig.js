@@ -1,6 +1,15 @@
 import { Vec3 } from "../math/Vec3.js";
 
+/**
+ * @typedef ClusteredLightsConfigOptions
+ * @property {[number, number, number]} [clusterCount]
+ * @property {number} [maxLightsPerClusterPass]
+ */
+
 export class ClusteredLightsConfig {
+	/**
+	 * @param {ClusteredLightsConfigOptions} [options]
+	 */
 	constructor({
 		clusterCount = [16, 9, 24],
 		maxLightsPerClusterPass = 10,

@@ -19,7 +19,7 @@
 import { Entity } from "../../../src/mod.js";
 import { EventHandler } from "../../../src/util/EventHandler.js";
 import { IterableWeakSet } from "../../../src/util/IterableWeakSet.js";
-import { ProjectAssetTypeEntity } from "./projectAssetType/ProjectAssetTypeEntity.js";
+import { entityProjectAssetType } from "./projectAssetTypes/entity.js";
 
 /**
  * @readonly
@@ -209,7 +209,7 @@ export class EntityAssetManager {
 			(async () => {
 				if (trackedData.sourceEntity) throw new Error("Source entity is already loaded");
 				const sourceEntity = await this.#assetManager.getLiveAsset(uuid, {
-					assertAssetType: ProjectAssetTypeEntity,
+					assertAssetType: entityProjectAssetType,
 					assertExists: true,
 				});
 				trackedData.sourceEntity = sourceEntity;

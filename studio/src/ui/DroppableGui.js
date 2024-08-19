@@ -1,7 +1,7 @@
 import { getStudioInstance } from "../studioInstance.js";
 import { parseMimeType } from "../util/util.js";
 import { ProjectAsset } from "../assets/ProjectAsset.js";
-import { ProjectAssetType } from "../assets/projectAssetType/ProjectAssetType.js";
+// import { ProjectAssetType } from "../assets/projectAssetTypes/ProjectAssetType.js";
 import { isUuid } from "../../../src/mod.js";
 
 /**
@@ -81,7 +81,7 @@ import { isUuid } from "../../../src/mod.js";
  * I.e. if the generic type is a live asset constructor, this will simply return that constructor,
  * but if the generic type is a ProjectAssetType, then its live asset constructor will be returned.
  * @template T
- * @typedef {T extends import("../assets/projectAssetType/ProjectAssetType.js").ProjectAssetType<infer TLiveAsset, any, any> ?
+ * @typedef {T extends import("../assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType<infer TLiveAsset, any, any> ?
  * 	TLiveAsset :
  * T} GetLiveAssetFromProjectAssetTypeReturnType
  */
@@ -440,7 +440,7 @@ export class DroppableGui {
 	/**
 	 * Turns the provided supported asset types that are live asset constructors into actual ProjectAssetTypes.
 	 * Entries that are already ProjectAssetTypes are left as is.
-	 * @returns {Generator<typeof import("../assets/projectAssetType/ProjectAssetType.js").ProjectAssetType>}
+	 * @returns {Generator<typeof import("../assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType>}
 	 */
 	*getProjectAssetTypeFromSupported() {
 		for (const liveAssetConstructor of this.supportedAssetTypes) {
@@ -456,7 +456,7 @@ export class DroppableGui {
 
 	/**
 	 * @private
-	 * @param {typeof import("../assets/projectAssetType/ProjectAssetType.js").ProjectAssetType} projectAssetType
+	 * @param {typeof import("../assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetType} projectAssetType
 	 * @param {import("./propertiesTreeView/types.ts").ChangeEventTriggerType} trigger
 	 */
 	createEmbeddedAsset(projectAssetType, trigger) {

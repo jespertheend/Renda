@@ -1,5 +1,5 @@
 import { TypedMessenger } from "../../../../src/util/TypedMessenger/TypedMessenger.js";
-import { ProjectAssetTypeJavascript } from "../../assets/projectAssetType/ProjectAssetTypeJavascript.js";
+import { javaScriptProjectAssetType } from "../../assets/projectAssetTypes/javaScript.js";
 import { createTreeViewStructure } from "../../ui/propertiesTreeView/createStructureHelpers.js";
 import { Task } from "./Task.js";
 
@@ -37,7 +37,7 @@ export class TaskBundleScripts extends Task {
 			guiOpts: {
 				arrayType: "droppable",
 				arrayGuiOpts: {
-					supportedAssetTypes: [ProjectAssetTypeJavascript],
+					supportedAssetTypes: [javaScriptProjectAssetType],
 				},
 			},
 		},

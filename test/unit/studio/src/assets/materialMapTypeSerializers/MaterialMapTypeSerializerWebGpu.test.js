@@ -68,7 +68,7 @@ Deno.test({
 	async fn() {
 		const { context, pipelineConfig, materialMapAsset, pipeLineConfigAsset } = getMockContext();
 
-		const mockProjectAssetType = /** @type {import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} */ ({
+		const mockProjectAssetType = /** @type {import("../../../../../../studio/src/assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} */ ({
 			listenForUsedLiveAssetChanges(projectAsset) {},
 		});
 		const listenForUsedLiveAssetChangesSpy = spy(mockProjectAssetType, "listenForUsedLiveAssetChanges");
@@ -121,7 +121,7 @@ Deno.test({
 Deno.test({
 	name: "saveLiveAssetData() with an embedded forwardPipelineConfig",
 	async fn() {
-		/** @type {import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeWebGpuPipelineConfig.js").WebGpuPipelineConfigAssetData} */
+		/** @type {import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeWebGpuPipelineConfig.js").WebGpuPipelineConfigAssetData} */
 		const pipelineConfigData = {
 			depthWriteEnabled: true,
 			renderOrder: 123,

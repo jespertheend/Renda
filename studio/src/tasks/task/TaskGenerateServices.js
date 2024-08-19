@@ -1,5 +1,5 @@
 import { CLUSTER_BOUNDS_SHADER_ASSET_UUID, CLUSTER_LIGHTS_SHADER_ASSET_UUID } from "../../../../src/mod.js";
-import { ProjectAssetTypeJavascript } from "../../assets/projectAssetType/ProjectAssetTypeJavascript.js";
+import { javaScriptProjectAssetType } from "../../assets/projectAssetTypes/javaScript.js";
 import { createTreeViewStructure } from "../../ui/propertiesTreeView/createStructureHelpers.js";
 import { Task } from "./Task.js";
 
@@ -32,7 +32,7 @@ import { Task } from "./Task.js";
  */
 
 /**
- * @template {import("../../assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} [TProjectAssetType = any]
+ * @template {import("../../assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} [TProjectAssetType = any]
  * @typedef AssetLoaderTypeImportConfig
  * @property {string} identifier The identifier to import and pass to `registerLoaderType`.
  * @property {string} [moduleSpecifier] The module specifier to import from, this defaults to "renda".
@@ -54,7 +54,7 @@ import { Task } from "./Task.js";
  */
 
 /**
- * @template {import("../../assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeAny} TProjectAssetType
+ * @template {import("../../assets/ProjectAssetTypeManager.js").ProjectAssetTypeAny} TProjectAssetType
  * @typedef AssetLoaderTypeImportConfigExtraContext
  * @property {import("../../Studio.js").Studio} studio The studio instance.
  * @property {import("../../assets/AssetManager.js").AssetManager} assetManager The asset manager instance.
@@ -88,7 +88,7 @@ export class TaskGenerateServices extends Task {
 			guiOpts: {
 				arrayType: "droppable",
 				arrayGuiOpts: {
-					supportedAssetTypes: [ProjectAssetTypeJavascript],
+					supportedAssetTypes: [javaScriptProjectAssetType],
 				},
 			},
 		},
@@ -185,7 +185,7 @@ export class TaskGenerateServices extends Task {
 		const collectedExportIdentifiers = new Set();
 
 		if (needsAssetLoader) {
-			/** @type {Map<import("../../assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeIdentifier, Set<import("../../assets/ProjectAsset.js").ProjectAssetAny>>} */
+			/** @type {Map<import("../../assets/ProjectAssetTypeManager.js").ProjectAssetTypeIdentifier, Set<import("../../assets/ProjectAsset.js").ProjectAssetAny>>} */
 			const assetTypes = new Map();
 			for await (const uuid of assetManager.collectAllAssetReferences(config.usedAssets)) {
 				const asset = await assetManager.getProjectAssetFromUuid(uuid);

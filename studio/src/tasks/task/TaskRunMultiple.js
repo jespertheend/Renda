@@ -1,4 +1,4 @@
-import { ProjectAssetTypeTask } from "../../assets/projectAssetType/ProjectAssetTypeTask.js";
+import { taskProjectAssetType } from "../../assets/projectAssetTypes/task.js";
 import { createTreeViewStructure } from "../../ui/propertiesTreeView/createStructureHelpers.js";
 import { Task } from "./Task.js";
 
@@ -10,7 +10,7 @@ const taskGroupStructure = createTreeViewStructure({
 	task: {
 		type: "droppable",
 		guiOpts: {
-			supportedAssetTypes: [ProjectAssetTypeTask],
+			supportedAssetTypes: [taskProjectAssetType],
 		},
 	},
 	parallel: {

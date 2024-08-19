@@ -1,6 +1,6 @@
-import { ProjectAssetTypeEntity } from "../assets/projectAssetType/ProjectAssetTypeEntity.js";
-import { ProjectAssetTypeHtml } from "../assets/projectAssetType/ProjectAssetTypeHtml.js";
-import { ProjectAssetTypeJavascript } from "../assets/projectAssetType/ProjectAssetTypeJavascript.js";
+import { entityProjectAssetType } from "../assets/projectAssetTypes/entity.js";
+import { htmlProjectAssetType } from "../assets/projectAssetTypes/html.js";
+import { javaScriptProjectAssetType } from "../assets/projectAssetTypes/javaScript.js";
 
 /**
  * Takes a preference type and returns it as const.
@@ -77,7 +77,7 @@ pinch gesture or by holding the ctrl key.`,
 			guiOpts: {
 				arrayType: "droppable",
 				arrayGuiOpts: {
-					supportedAssetTypes: [ProjectAssetTypeHtml, ProjectAssetTypeJavascript],
+					supportedAssetTypes: [htmlProjectAssetType, javaScriptProjectAssetType],
 				},
 			},
 		},
@@ -91,7 +91,7 @@ pinch gesture or by holding the ctrl key.`,
 			guiOpts: {
 				arrayType: "droppable",
 				arrayGuiOpts: {
-					supportedAssetTypes: [ProjectAssetTypeEntity],
+					supportedAssetTypes: [entityProjectAssetType],
 				},
 			},
 		},

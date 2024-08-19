@@ -1,7 +1,7 @@
 import "../../../shared/initializeStudio.js";
 import { assertEquals, assertExists, assertRejects } from "std/testing/asserts.ts";
-import { ProjectAssetTypeEntity } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeEntity.js";
-import { ProjectAssetTypeMaterial } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeMaterial.js";
+import { ProjectAssetTypeEntity } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeEntity.js";
+import { ProjectAssetTypeMaterial } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeMaterial.js";
 import { injectMockStudioInstance } from "../../../../../../studio/src/studioInstance.js";
 import { assertIsType, testTypes } from "../../../../shared/typeAssertions.js";
 import { createMockProjectAssetType } from "../../../shared/createMockProjectAssetType.js";
@@ -108,8 +108,8 @@ testTypes({
 	name: "getProjectAssetFromPath() has the correct return types",
 	async fn() {
 		const { assetManager } = await basicSetup();
-		const projectAssetUnknown = /** @type {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeUnknown>} */ ({});
-		const projectAssetUnknownOrNull = /** @type {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<import("../../../../../../studio/src/assets/projectAssetType/ProjectAssetType.js").ProjectAssetTypeUnknown>?} */ ({});
+		const projectAssetUnknown = /** @type {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetTypeUnknown>} */ ({});
+		const projectAssetUnknownOrNull = /** @type {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<import("../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetType.js").ProjectAssetTypeUnknown>?} */ ({});
 		const projectAssetMaterial = /** @type {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<ProjectAssetTypeMaterial>} */ ({});
 		const projectAssetMaterialOrNull = /** @type {typeof projectAssetMaterial | null} */ ({});
 		const projectAssetEntity = /** @type {import("../../../../../../studio/src/assets/ProjectAsset.js").ProjectAsset<ProjectAssetTypeEntity>} */ ({});

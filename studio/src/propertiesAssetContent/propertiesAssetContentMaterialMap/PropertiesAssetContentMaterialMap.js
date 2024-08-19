@@ -3,7 +3,7 @@ import { MaterialMapTypeEntry } from "./MaterialMapTypeEntry.js";
 
 /**
  * Responsible for rendering the ui in the properties window for MaterialMaps.
- * @extends {PropertiesAssetContent<import("../../assets/projectAssetType/ProjectAssetTypeMaterialMap.js").ProjectAssetTypeMaterialMap>}
+ * @extends {PropertiesAssetContent<import("../../assets/projectAssetTypes/materialMap.js").materialMapProjectAssetType>}
  */
 export class PropertiesAssetContentMaterialMap extends PropertiesAssetContent {
 	/**
@@ -76,7 +76,7 @@ export class PropertiesAssetContentMaterialMap extends PropertiesAssetContent {
 
 	/**
 	 * @override
-	 * @param {import("../../assets/ProjectAsset.js").ProjectAsset<import("../../assets/projectAssetType/ProjectAssetTypeMaterialMap.js").ProjectAssetTypeMaterialMap>[]} selectedMaps
+	 * @param {import("../../assets/ProjectAsset.js").ProjectAsset<import("../../assets/projectAssetTypes/materialMap.js").materialMapProjectAssetType>[]} selectedMaps
 	 */
 	async selectionUpdated(selectedMaps) {
 		super.selectionUpdated(selectedMaps);

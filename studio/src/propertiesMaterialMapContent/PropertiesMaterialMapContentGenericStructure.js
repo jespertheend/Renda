@@ -20,7 +20,7 @@ export class PropertiesMaterialMapContentGenericStructure extends PropertiesMate
 
 	/**
 	 * @override
-	 * @param {import("../assets/ProjectAsset.js").ProjectAsset<import("../assets/projectAssetType/ProjectAssetTypeMaterialMap.js").ProjectAssetTypeMaterialMap>[]} selectedMaps
+	 * @param {import("../assets/ProjectAsset.js").ProjectAsset<import("../assets/projectAssetTypes/materialMap.js").materialMapProjectAssetType>[]} selectedMaps
 	 */
 	selectedAssetsUpdated(selectedMaps) {
 		let parentAsset = null;

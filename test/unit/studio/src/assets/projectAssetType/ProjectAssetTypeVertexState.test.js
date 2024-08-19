@@ -1,5 +1,5 @@
 import { assertEquals } from "std/testing/asserts.ts";
-import { ProjectAssetTypeVertexState } from "../../../../../../studio/src/assets/projectAssetType/ProjectAssetTypeVertexState.js";
+import { ProjectAssetTypeVertexState } from "../../../../../../studio/src/assets/projectAssetTypes/ProjectAssetTypeVertexState.js";
 
 Deno.test({
 	name: "transformBundledAssetData",

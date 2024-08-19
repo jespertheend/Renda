@@ -1,5 +1,5 @@
 import { TypedMessenger } from "../../../../src/util/TypedMessenger/TypedMessenger.js";
-import { ProjectAssetTypeJavascript } from "../../assets/projectAssetType/ProjectAssetTypeJavascript.js";
+import { javaScriptProjectAssetType } from "../../assets/projectAssetTypes/javaScript.js";
 import { createTreeViewStructure } from "../../ui/propertiesTreeView/createStructureHelpers.js";
 import { Task } from "./Task.js";
 
@@ -25,7 +25,7 @@ export class TaskBuildApplication extends Task {
 		entryPoint: {
 			type: "droppable",
 			guiOpts: {
-				supportedAssetTypes: [ProjectAssetTypeJavascript],
+				supportedAssetTypes: [javaScriptProjectAssetType],
 			},
 		},
 		outputDir: {
