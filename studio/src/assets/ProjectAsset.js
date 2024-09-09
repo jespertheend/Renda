@@ -103,12 +103,6 @@ export class ProjectAsset {
 		this.needsPersistentUuid = false;
 		this.isBuiltIn = isBuiltIn;
 		this.isEmbedded = !!embeddedParent;
-		/**
-		 * A map that allows you to get a ProjectAsset from a live asset that
-		 * was created by this ProjectAsset. For more info see {@linkcode InternallyCreatedAsset}.
-		 * @type {WeakMap<object, import("./InternallyCreatedAsset.js").InternallyCreatedAsset>}
-		 */
-		this.internallyCreatedAssets = new WeakMap();
 
 		/** @private @type {T?} */
 		this._projectAssetType = null;
@@ -762,23 +756,6 @@ export class ProjectAsset {
 		if (!ref) return null;
 		const deref = ref?.deref();
 		return deref ?? null;
-	}
-
-	/**
-	 * @param {object} liveAsset
-	 * @param {unknown} persistenceData You can use this to keep the uuid of the internal asset persistent
-	 * across sessions. This data is stored in .renda/assetSettings.json of the project and whenever
-	 * a new uuid is created, this file is checked first if the provided data matches the data from an
-	 * existing uuid.
-	 */
-	registerInternallyCreatedAsset(liveAsset, persistenceData) {
-		let internallyCreated = this.internallyCreatedAssets.get(liveAsset);
-		if (!internallyCreated) {
-			internallyCreated = this.assetManager.getOrCreateInternallyCreatedAsset(persistenceData);
-			this.internallyCreatedAssets.set(liveAsset, internallyCreated);
-		}
-		// TODO: update persistence data and write to assetSettings.json if the
-		// asset has a persistent uuid
 	}
 
 	/**
