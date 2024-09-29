@@ -1,118 +1,156 @@
 {
-	"assets": {
-		"873ade41-8986-4371-b2a3-5bc1aff9d938": {
+	"projectFiles": [
+		{
+			"uuid": "873ade41-8986-4371-b2a3-5bc1aff9d938",
 			"path": ["DefaultAssets", "Default Material", "Default Material Map.json"]
 		},
-		"542fb96a-d3f8-4150-9963-9f1bf803da67": {
+		{
+			"uuid": "542fb96a-d3f8-4150-9963-9f1bf803da67",
 			"path": ["DefaultAssets", "Default Material", "Default Material.json"]
 		},
-		"abc1df88-ae0b-4a5d-8ac4-0a98c1602a32": {
+		{
+			"uuid": "abc1df88-ae0b-4a5d-8ac4-0a98c1602a32",
 			"path": ["DefaultAssets", "Default Material", "Default Pipeline Configuration.json"]
 		},
-		"01ba9a17-bbff-4c12-b234-9eb47c1fcc7c": {
+		{
+			"uuid": "01ba9a17-bbff-4c12-b234-9eb47c1fcc7c",
 			"path": ["DefaultAssets", "Default Clustered Lights Config.json"]
 		},
-		"27a0c1fb-2187-4e11-82c7-a944ff43ec47": {
+		{
+			"uuid": "27a0c1fb-2187-4e11-82c7-a944ff43ec47",
 			"path": ["DefaultAssets", "Default Sampler.json"]
 		},
-		"36996838-4f7e-4be3-9c18-49c4a9db00be": {
+		{
+			"uuid": "36996838-4f7e-4be3-9c18-49c4a9db00be",
 			"path": ["DefaultAssets", "Default Vertex State.json"]
 		},
-		"5a328430-e3bc-4eda-afab-789f00439f81": {
+		{
+			"uuid": "5a328430-e3bc-4eda-afab-789f00439f81",
 			"path": ["buildSupport", "basicEntryPoint.js"]
 		},
-		"264a38b9-4e43-4261-b57d-28a778a12dd9": {
+		{
+			"uuid": "264a38b9-4e43-4261-b57d-28a778a12dd9",
 			"path": ["buildSupport", "basicIndex.html"]
 		},
-		"6e258624-2df6-47db-8a89-08dd14412d30": {
+		{
+			"uuid": "6e258624-2df6-47db-8a89-08dd14412d30",
 			"path": ["gizmos", "billboard gizmo", "Material Map.json"]
 		},
-		"6ebfe5aa-6754-406e-a238-ec052eefa7df": {
+		{
+			"uuid": "6ebfe5aa-6754-406e-a238-ec052eefa7df",
 			"path": ["gizmos", "billboard gizmo", "Material.json"]
 		},
-		"3b9f6940-f13d-4edb-a85e-768f88f74df7": {
+		{
+			"uuid": "3b9f6940-f13d-4edb-a85e-768f88f74df7",
 			"path": ["gizmos", "billboard gizmo", "Pipeline Config.json"]
 		},
-		"9d9ebd2e-c657-4252-b7af-b5889a4986c3": {
+		{
+			"uuid": "9d9ebd2e-c657-4252-b7af-b5889a4986c3",
 			"path": ["gizmos", "billboard gizmo", "Vertex State.json"]
 		},
-		"360d0012-577e-4bdc-85bc-82e75be40f53": {
+		{
+			"uuid": "360d0012-577e-4bdc-85bc-82e75be40f53",
 			"path": ["gizmos", "billboard gizmo", "vert.wgsl"]
 		},
-		"2f144ab0-49c2-422e-8ea1-b3bd9c1fdddb": {
+		{
+			"uuid": "2f144ab0-49c2-422e-8ea1-b3bd9c1fdddb",
 			"path": ["gizmos", "mesh gizmo", "Material Map.json"]
 		},
-		"47f64a6d-9629-4921-8b1a-a244af1aa568": {
+		{
+			"uuid": "47f64a6d-9629-4921-8b1a-a244af1aa568",
 			"path": ["gizmos", "mesh gizmo", "Material.json"]
 		},
-		"f9704f9a-92b3-4525-9870-3fca18605614": {
+		{
+			"uuid": "f9704f9a-92b3-4525-9870-3fca18605614",
 			"path": ["gizmos", "mesh gizmo", "Pipeline Config.json"]
 		},
-		"2a5ca9e6-6790-441b-8764-a07fbb438d1a": {
+		{
+			"uuid": "2a5ca9e6-6790-441b-8764-a07fbb438d1a",
 			"path": ["gizmos", "mesh gizmo", "Vertex State.json"]
 		},
-		"1e48d7b4-4e74-4d66-bdf6-8f8c65771768": {
+		{
+			"uuid": "1e48d7b4-4e74-4d66-bdf6-8f8c65771768",
 			"path": ["gizmos", "mesh gizmo", "vert.wgsl"]
 		},
-		"cf617a8f-4afa-4147-8afa-71bb6314a554": {
+		{
+			"uuid": "cf617a8f-4afa-4147-8afa-71bb6314a554",
 			"path": ["gizmos", "wgsl", "Frag.wgsl"]
 		},
-		"26ace8e7-7181-4e44-b507-f723b3567e9d": {
+		{
+			"uuid": "26ace8e7-7181-4e44-b507-f723b3567e9d",
 			"path": ["shaders", "wgsl", "ClusteredCompute", "ClusterBoundsStruct.wgsl"]
 		},
-		"0e0f87de-6305-45df-9513-c5c08d08a2d7": {
+		{
+			"uuid": "0e0f87de-6305-45df-9513-c5c08d08a2d7",
 			"path": ["shaders", "wgsl", "ClusteredCompute", "ClusterLightsStruct.wgsl"]
 		},
-		"892d56b3-df77-472b-93dd-2c9c38ec2f3d": {
+		{
+			"uuid": "892d56b3-df77-472b-93dd-2c9c38ec2f3d",
 			"path": ["shaders", "wgsl", "ClusteredCompute", "ComputeClusterBounds.wgsl"]
 		},
-		"a2b8172d-d910-47e9-8d3b-2a8ea3280153": {
+		{
+			"uuid": "a2b8172d-d910-47e9-8d3b-2a8ea3280153",
 			"path": ["shaders", "wgsl", "ClusteredCompute", "ComputeClusterLights.wgsl"]
 		},
-		"8cd64104-1d45-4536-972a-5685a2523725": {
+		{
+			"uuid": "8cd64104-1d45-4536-972a-5685a2523725",
 			"path": ["shaders", "wgsl", "materials", "structs", "lightUniforms.wgsl"]
 		},
-		"08a38e5b-b2b9-44be-9194-f404f815445f": {
+		{
+			"uuid": "08a38e5b-b2b9-44be-9194-f404f815445f",
 			"path": ["shaders", "wgsl", "materials", "structs", "modelUniforms.wgsl"]
 		},
-		"41eaba39-e2aa-48a3-8deb-47f410542bc2": {
+		{
+			"uuid": "41eaba39-e2aa-48a3-8deb-47f410542bc2",
 			"path": ["shaders", "wgsl", "materials", "structs", "viewUniforms.wgsl"]
 		},
-		"9deb2d09-8c4a-45b7-b60a-30eb9536d199": {
+		{
+			"uuid": "9deb2d09-8c4a-45b7-b60a-30eb9536d199",
 			"path": ["shaders", "wgsl", "materials", "frag.wgsl"]
 		},
-		"eb430f5f-a7fa-4a77-acc6-56106769adb7": {
+		{
+			"uuid": "eb430f5f-a7fa-4a77-acc6-56106769adb7",
 			"path": ["shaders", "wgsl", "materials", "vert.wgsl"]
 		},
-		"98c32773-068b-4368-9a55-a3d046624acd": {
+		{
+			"uuid": "98c32773-068b-4368-9a55-a3d046624acd",
 			"path": ["shaders", "wgsl", "util", "fresnelSchlick.wgsl"]
 		},
-		"29f11b37-5501-4d58-bfe3-e9c831fcd3e2": {
+		{
+			"uuid": "29f11b37-5501-4d58-bfe3-e9c831fcd3e2",
 			"path": ["shaders", "wgsl", "util", "geometrySmith.wgsl"]
 		},
-		"2704bc9a-1996-41f5-a203-7a67b5d211a7": {
+		{
+			"uuid": "2704bc9a-1996-41f5-a203-7a67b5d211a7",
 			"path": ["shaders", "wgsl", "util", "pi.wgsl"]
 		},
-		"76ed4a0e-36ac-4419-af53-4890041b673a": {
+		{
+			"uuid": "76ed4a0e-36ac-4419-af53-4890041b673a",
 			"path": ["shaders", "wgsl", "util", "trowbridgeReitzGgx.wgsl"]
 		},
-		"12b5f619-5651-478d-8df1-642a23a43e3e": {
+		{
+			"uuid": "12b5f619-5651-478d-8df1-642a23a43e3e",
 			"path": ["studio", "entityEditor", "grid", "Material.json"]
 		},
-		"35fe0836-6ed6-42c1-83ab-06243aef04d2": {
+		{
+			"uuid": "35fe0836-6ed6-42c1-83ab-06243aef04d2",
 			"path": ["studio", "entityEditor", "grid", "Vertex State.json"]
 		},
-		"2b0900bd-7804-4344-b85f-90a57454277b": {
+		{
+			"uuid": "2b0900bd-7804-4344-b85f-90a57454277b",
 			"path": ["studio", "entityEditor", "grid", "frag.wgsl"]
 		},
-		"c90b3e99-2e94-497e-b10f-52e1b3cf0029": {
+		{
+			"uuid": "c90b3e99-2e94-497e-b10f-52e1b3cf0029",
 			"path": ["studio", "entityEditor", "grid", "vert.wgsl"]
 		},
-		"f7f15715-6457-47fb-b8b1-0b5b2e7aeda2": {
+		{
+			"uuid": "f7f15715-6457-47fb-b8b1-0b5b2e7aeda2",
 			"path": ["studio", "readme.md"]
 		},
-		"2c2abb9a-8c5a-4faf-a605-066d33242391": {
+		{
+			"uuid": "2c2abb9a-8c5a-4faf-a605-066d33242391",
 			"path": ["webgpuExterns.js"]
 		}
-	}
+	]
 }

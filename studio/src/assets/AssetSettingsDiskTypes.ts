@@ -1,16 +1,22 @@
 import type {UuidString} from "../../../src/mod.js";
+import { StudioFileSystemPath } from "../util/fileSystems/StudioFileSystem.js";
 import {AssetLinkConfig} from "./DefaultAssetLink.js";
 
 export type AssetSettingsDiskData = {
-	assets?: {
-		[x: UuidString]: AssetSettingsAssetDiskData,
-	},
+	projectFiles?: AssetSettingsProjectFile[],
 	defaultAssetLinks?: {
 		[x: UuidString]: AssetLinkConfig,
 	},
 }
 
-export type AssetSettingsAssetDiskData = {
-	path: string[],
-	assetSettings?: Object,
+export type AssetSettingsProjectFile = {
+	path: StudioFileSystemPath,
+	uuid?: UuidString,
+	assets?: {
+		[x: UuidString]: StudioFileSystemPath,
+	}
+}
+
+export type BuiltInAssetSettingsDiskData = {
+	projectFiles: AssetSettingsProjectFile[],
 }

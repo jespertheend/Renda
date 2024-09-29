@@ -1,16 +1,21 @@
 import { ContentWindow } from "./ContentWindow.js";
 import { TreeView } from "../../ui/TreeView.js";
+import { ProjectFilesTreeView } from "../ProjectFilesTreeView.js";
 
 export class ContentWindowBuiltInAssets extends ContentWindow {
 	static contentWindowTypeId = /** @type {const} */ ("renda:builtInAssets");
 	static contentWindowUiName = "Built-in Assets";
 	static contentWindowUiIcon = "static/icons/contentWindowTabs/builtInAssets.svg";
 
+	#treeView;
+
 	/**
 	 * @param {ConstructorParameters<typeof ContentWindow>} args
 	 */
 	constructor(...args) {
 		super(...args);
+
+		this.#treeView = new ProjectFilesTreeView(this.studioInstance.builtInAssetLibrary);
 
 		/** @type {Map<TreeView, import("../../assets/ProjectAsset.js").ProjectAssetAny>} */
 		this.treeViewAssets = new Map();

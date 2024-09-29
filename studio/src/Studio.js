@@ -13,7 +13,6 @@ import { ComponentGizmosManager } from "./componentGizmos/ComponentGizmosManager
 import { MaterialMapTypeSerializerManager } from "./assets/MaterialMapTypeSerializerManager.js";
 import { ProjectManager } from "./projectSelector/ProjectManager.js";
 import { BuiltInDefaultAssetLinksManager } from "./assets/BuiltInDefaultAssetLinksManager.js";
-import { BuiltInAssetManager } from "./assets/BuiltInAssetManager.js";
 import { DragManager } from "./misc/DragManager.js";
 import { ServiceWorkerManager } from "./misc/ServiceWorkerManager.js";
 import { IS_DEV_BUILD } from "./studioDefines.js";
@@ -28,6 +27,8 @@ import { GestureInProgressManager } from "./misc/GestureInProgressManager.js";
 import { WebGpuRendererError } from "../../src/rendering/renderers/webGpu/WebGpuRendererError.js";
 import { StudioConnectionsManager } from "./network/studioConnections/StudioConnectionsManager.js";
 import { ScrollHardwareDetector } from "../../src/util/ScrollHardwareDetector.js";
+import { AssetLibrary } from "./assets/assetLibrary/AssetLibrary.js";
+import { BuiltInAssetLibrary } from "./assets/assetLibrary/BuiltInAssetLibrary.js";
 
 export class Studio {
 	constructor() {
@@ -69,7 +70,7 @@ export class Studio {
 		this.projectManager = new ProjectManager();
 		this.studioConnectionsManager = new StudioConnectionsManager(this.projectManager, this.preferencesManager);
 		this.builtInDefaultAssetLinksManager = new BuiltInDefaultAssetLinksManager();
-		this.builtInAssetManager = new BuiltInAssetManager(this.projectAssetTypeManager);
+		this.builtInAssetLibrary = new BuiltInAssetLibrary();
 		this.dragManager = new DragManager();
 		this.scrollHardwareDetector = new ScrollHardwareDetector();
 		this.serviceWorkerManager = new ServiceWorkerManager();
@@ -99,20 +100,21 @@ export class Studio {
 
 	init() {
 		if (IS_DEV_BUILD && this.devSocket) {
-			this.builtInAssetManager.init(this.devSocket);
+			this.builtInAssetLibrary.initDevSocket(this.devSocket);
 		}
 		this.engineAssetManager.addGetAssetHandler(async (uuid) => {
-			await this.builtInAssetManager.waitForLoad();
-			await this.projectManager.waitForAssetListsLoad();
-			const projectAsset = this.builtInAssetManager.assets.get(uuid);
-			if (!projectAsset) return null;
-			return await projectAsset.getLiveAsset();
+			return await this.builtInAssetLibrary.getLiveAsset(uuid);
+			// await this.builtInAssetManager.waitForLoad();
+			// await this.projectManager.waitForAssetListsLoad();
+			// const projectAsset = this.builtInAssetManager.assets.get(uuid);
+			// if (!projectAsset) return null;
+			// return await projectAsset.getLiveAsset();
 		});
-		if (IS_DEV_BUILD) {
-			this.builtInAssetManager.onAssetChange((uuid) => {
-				this.engineAssetManager.notifyAssetChanged(uuid);
-			});
-		}
+		// if (IS_DEV_BUILD) {
+		// 	this.builtInAssetManager.onAssetChange((uuid) => {
+		// 		this.engineAssetManager.notifyAssetChanged(uuid);
+		// 	});
+		// }
 
 		/**
 		 * A promise that resolves with a string that can be used as user visible error message when the renderer failed to initialize.

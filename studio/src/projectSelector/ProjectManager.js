@@ -195,17 +195,6 @@ export class ProjectManager {
 	};
 
 	/**
-	 * If asset settings are already loaded, this is a no-op.
-	 * If not, this will load the asset settings and wait for them to load.
-	 * A permission prompt might be shown, so this should only be called from
-	 * a user gesture.
-	 */
-	async loadAssetSettingsFromUserGesture() {
-		const assetManager = this.assertAssetManagerExists();
-		await assetManager.loadAssetSettings(true);
-	}
-
-	/**
 	 * @param {StoredProjectEntryAny} entry
 	 */
 	isCurrentProjectEntry(entry) {
@@ -225,10 +214,9 @@ export class ProjectManager {
 			throw new Error("Unable to reload the asset manager. No active file system.");
 		}
 		const studio = getStudioInstance();
-		const builtInAssetManager = studio.builtInAssetManager;
 		const builtInDefaultAssetLinksManager = studio.builtInDefaultAssetLinksManager;
 		const projectAssetTypeManager = studio.projectAssetTypeManager;
-		const assetManager = new AssetManager(this, builtInAssetManager, builtInDefaultAssetLinksManager, projectAssetTypeManager, this.currentProjectFileSystem);
+		const assetManager = new AssetManager(this, studio.builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, this.currentProjectFileSystem);
 		this.assetManager = assetManager;
 		await this.assetManager.waitForAssetSettingsLoad();
 		this.#onAssetManagerLoadPromiseCbs.forEach((cb) => cb());

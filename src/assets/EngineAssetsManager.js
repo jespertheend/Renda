@@ -16,7 +16,7 @@ import { ENGINE_ASSETS_LIVE_UPDATES_SUPPORT } from "../engineDefines.js";
  * more than a wrapper around the `AssetLoader.getAsset()` method.
  * But when this is not the case, {@linkcode addGetAssetHandler} callbacks are
  * called for every {@linkcode getAsset} request. This allows you to hook into
- * the asset loading logic and load assets from a `BuiltInAssetManager`.
+ * the asset loading logic and load assets from the `BuiltInAssetLibrary`.
  */
 export class EngineAssetsManager {
 	/**

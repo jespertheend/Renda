@@ -32,7 +32,7 @@ export class BuiltInAssetManager {
 			await this.loadAssetSettingsFn();
 		});
 		this.assetSettingsLoaded = false;
-		/** @type {Map<import("../../../src/util/mod.js").UuidString, import("../../src/assets/AssetSettingsDiskTypes.ts").AssetSettingsAssetDiskData>}*/
+		/** @type {Map<import("../../../src/util/mod.js").UuidString, import("../../src/assets/AssetSettingsDiskTypes.ts").AssetSettingsProjectFile>}*/
 		this.assetSettings = new Map();
 		/** @type {Map<string, import("../../../src/util/mod.js").UuidString>} */
 		this.fileHashes = new Map(); // <md5, uuid>
@@ -70,7 +70,7 @@ export class BuiltInAssetManager {
 		} catch {
 			// We'll handle this below.
 		}
-		if (!data || !data.assets) {
+		if (!data || !data.projectFiles) {
 			console.error("[BuiltInAssetManager] parsing asset settings failed");
 			return;
 		}
@@ -78,7 +78,7 @@ export class BuiltInAssetManager {
 		this.fileHashes.clear();
 		/** @type {Promise<void>[]} */
 		const promises = [];
-		for (const [uuid, assetData] of Object.entries(data.assets)) {
+		for (const [uuid, assetData] of Object.entries(data.projectFiles)) {
 			this.assetSettings.set(uuid, assetData);
 			if (assetData.path) {
 				const fullPath = resolve(this.builtInAssetsPath, ...assetData.path);

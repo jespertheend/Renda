@@ -70,9 +70,9 @@ export async function basicSetup({
 	let assetSettingsAssets = null;
 	if (assetSettings == null) {
 		assetSettings = {
-			assets: {},
+			projectFiles: {},
 		};
-		assetSettingsAssets = assetSettings.assets;
+		assetSettingsAssets = assetSettings.projectFiles;
 	}
 
 	for (const stubAsset of stubAssets) {

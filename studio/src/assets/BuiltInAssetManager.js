@@ -9,6 +9,8 @@ import { getStudioInstance } from "../studioInstance.js";
  * @typedef {(uuid: import("../../../src/mod.js").UuidString) => any} BuiltInAssetChangeCallback
  */
 
+const BUILTIN_ASSETS_BASE_PATH = "builtInAssets/";
+
 /**
  * This class handles the loading of built-in assets.
  * Built-in assets work very similar to regular assets, but they can't be edited in studio.
@@ -29,61 +31,12 @@ export class BuiltInAssetManager {
 	constructor(projectAssetTypeManager) {
 		/** @type {Map<import("../../../src/mod.js").UuidString, import("./ProjectAsset.js").ProjectAssetAny>}*/
 		this.assets = new Map();
-		this.basePath = "builtInAssets/";
 
 		this.devSocket = null;
 
 		if (IS_DEV_BUILD) {
 			/** @type {Set<BuiltInAssetChangeCallback>} */
 			this.onAssetChangeCbs = new Set();
-		}
-
-		this.loadAssetsInstance = new SingleInstancePromise(async () => {
-			const response = await fetch(this.basePath + "assetSettings.json");
-			const json = await response.json();
-			const existingUuids = new Set(this.assets.keys());
-			for (const [uuid, assetData] of Object.entries(json.assets)) {
-				if (existingUuids.has(uuid)) {
-					existingUuids.delete(uuid);
-					continue;
-				}
-				assetData.isBuiltIn = true;
-				const assetManager = await getStudioInstance().projectManager.getAssetManager();
-				const projectAsset = await ProjectAsset.guessAssetTypeAndCreate(assetManager, projectAssetTypeManager, this, null, { uuid, ...assetData });
-				if (projectAsset) {
-					projectAsset.onLiveAssetNeedsReplacement(() => {
-						if (!this.onAssetChangeCbs) return;
-						for (const cb of this.onAssetChangeCbs) {
-							cb(uuid);
-						}
-					});
-					this.assets.set(uuid, projectAsset);
-				}
-			}
-			for (const uuid of existingUuids) {
-				const asset = this.assets.get(uuid);
-				asset?.destructor();
-				this.assets.delete(uuid);
-			}
-		});
-		this.loadAssetsInstance.run();
-	}
-
-	/**
-	 * @param {import("../network/DevSocketManager.js").DevSocketManager} devSocket
-	 */
-	init(devSocket) {
-		if (IS_DEV_BUILD) {
-			this.devSocket = devSocket;
-			devSocket.addListener("builtInAssetChange", (data) => {
-				const asset = this.assets.get(data.uuid);
-				if (asset) {
-					asset.fileChangedExternally();
-				}
-			});
-			devSocket.addListener("builtInAssetListUpdate", () => {
-				this.loadAssetsInstance.run();
-			});
 		}
 	}
 
@@ -115,7 +68,7 @@ export class BuiltInAssetManager {
 	 * @param {"json" | "text" | "binary"} format
 	 */
 	async fetchAsset(path, format = "json") {
-		const response = await fetch(this.basePath + path.join("/"));
+		const response = await fetch(BUILTIN_ASSETS_BASE_PATH + path.join("/"));
 		if (format == "json") {
 			return await response.json();
 		} else if (format == "text") {

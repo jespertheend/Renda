@@ -50,7 +50,7 @@ async function basicSetup({
 		removeOnPermissionPromptResult(cb) {
 			permissionPromptCbs.delete(cb);
 		},
-		async loadAssetSettings(fromUserGesture) {},
+		async loadProjectAssetSettings(fromUserGesture) {},
 		assetSettingsLoaded,
 	});
 

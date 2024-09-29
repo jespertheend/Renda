@@ -4,6 +4,8 @@ import { generateUuid } from "../../../src/util/mod.js";
 import { DefaultAssetLink } from "./DefaultAssetLink.js";
 import { ProjectAsset } from "./ProjectAsset.js";
 import { EntityAssetManager } from "./EntityAssetManager.js";
+import { AssetLibrary } from "./assetLibrary/AssetLibrary.js";
+import { ProjectAssetLibrary } from "./assetLibrary/ProjectAssetLibrary.js";
 
 /**
  * @typedef {object} SetDefaultBuiltInAssetLinkData
@@ -118,20 +120,28 @@ import { EntityAssetManager } from "./EntityAssetManager.js";
 
 /** @typedef {(granted: boolean) => void} OnPermissionPromptResultCallback */
 
+const ASSET_SETTINGS_PATH = [".renda", "assetSettings.json"];
+
 export class AssetManager {
 	/** @type {Set<OnPermissionPromptResultCallback>} */
 	#onPermissionPromptResultCbs = new Set();
 
+	#builtInAssetLibrary;
+	#projectAssetLibrary = new ProjectAssetLibrary();
+	get projectAssetLibrary() {
+		return this.#projectAssetLibrary;
+	}
+
 	/**
 	 * @param {import("../projectSelector/ProjectManager.js").ProjectManager} projectManager
-	 * @param {import("./BuiltInAssetManager.js").BuiltInAssetManager} builtInAssetManager
+	 * @param {AssetLibrary} builtInAssetLibrary
 	 * @param {import("./BuiltInDefaultAssetLinksManager.js").BuiltInDefaultAssetLinksManager} builtInDefaultAssetLinksManager
 	 * @param {import("./ProjectAssetTypeManager.js").ProjectAssetTypeManager} projectAssetTypeManager
 	 * @param {import("../util/fileSystems/StudioFileSystem.js").StudioFileSystem} fileSystem
 	 */
-	constructor(projectManager, builtInAssetManager, builtInDefaultAssetLinksManager, projectAssetTypeManager, fileSystem) {
+	constructor(projectManager, builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, fileSystem) {
 		this.projectManager = projectManager;
-		this.builtInAssetManager = builtInAssetManager;
+		this.#builtInAssetLibrary = builtInAssetLibrary;
 		this.builtInDefaultAssetLinksManager = builtInDefaultAssetLinksManager;
 		this.projectAssetTypeManager = projectAssetTypeManager;
 		this.fileSystem = fileSystem;
@@ -144,8 +154,6 @@ export class AssetManager {
 		/** @type {Map<import("../../../src/mod.js").UuidString, DefaultAssetLink>}*/
 		this.defaultAssetLinks = new Map();
 
-		this.assetSettingsPath = [".renda", "assetSettings.json"];
-
 		this.assetSettingsLoaded = false;
 		/** @type {Set<() => void>} */
 		this.waitForAssetSettingsLoadCbs = new Set();
@@ -153,29 +161,22 @@ export class AssetManager {
 		this.fileSystem.onChange(this.#onFileChange);
 
 		this.loadAssetSettingsFromUserGesture = false;
-		this.loadAssetSettingsInstance = new SingleInstancePromise(async () => {
-			await this.loadAssetSettingsInstanceFn();
-		});
-		this.loadAssetSettingsInstance.run();
+		this.#loadAssetSettingsInstance.run();
 	}
 
 	destructor() {
 		this.fileSystem.removeOnChange(this.#onFileChange);
 	}
 
-	get builtInAssets() {
-		return this.builtInAssetManager.assets;
-	}
-
-	async loadAssetSettings(fromUserGesture = false) {
+	async loadProjectAssetSettings(fromUserGesture = false) {
 		this.loadAssetSettingsFromUserGesture = fromUserGesture;
-		await this.loadAssetSettingsInstance.run();
+		await this.#loadAssetSettingsInstance.run();
 	}
 
-	async loadAssetSettingsInstanceFn() {
+	#loadAssetSettingsInstance = new SingleInstancePromise(async () => {
 		if (this.assetSettingsLoaded) return;
 
-		const hasPermissions = await this.fileSystem.getPermission(this.assetSettingsPath, {
+		const hasPermissions = await this.fileSystem.getPermission(ASSET_SETTINGS_PATH, {
 			prompt: this.loadAssetSettingsFromUserGesture,
 			writable: false,
 		});
@@ -192,18 +193,10 @@ export class AssetManager {
 			this.defaultAssetLinks.set(builtInAssetLink.defaultAssetUuid, defaultAssetLink);
 		}
 
-		if (await this.fileSystem.isFile(this.assetSettingsPath)) {
-			const json = /** @type {import("./AssetSettingsDiskTypes.ts").AssetSettingsDiskData?} */ (await this.fileSystem.readJson(this.assetSettingsPath));
+		if (await this.fileSystem.isFile(ASSET_SETTINGS_PATH)) {
+			const json = /** @type {import("./AssetSettingsDiskTypes.ts").AssetSettingsDiskData?} */ (await this.fileSystem.readJson(ASSET_SETTINGS_PATH));
 			if (json) {
-				if (json.assets) {
-					for (const [uuid, assetData] of Object.entries(json.assets)) {
-						const projectAsset = this.projectAssetFactory({ uuid, ...assetData });
-						if (projectAsset) {
-							projectAsset.makeUuidPersistent();
-							this.projectAssets.set(uuid, projectAsset);
-						}
-					}
-				}
+				this.#projectAssetLibrary.reloadAvailableAssets(json.projectFiles || []);
 
 				if (json.defaultAssetLinks) {
 					for (const [defaultAssetUuid, defaultAssetData] of Object.entries(json.defaultAssetLinks)) {
@@ -222,7 +215,7 @@ export class AssetManager {
 			cb();
 		}
 		this.assetSettingsLoaded = true;
-	}
+	})
 
 	/**
 	 * You'll likely want to use {@linkcode waitForAssetListsLoad} instead because
@@ -238,7 +231,7 @@ export class AssetManager {
 
 	/**
 	 * This callback is called when the user dismissed the prompt asking for
-	 * file system permissions that was triggered by a call to {@linkcode loadAssetSettings},
+	 * file system permissions that was triggered by a call to {@linkcode loadProjectAssetSettings},
 	 * This also fires when permission has been granted, either via the prompt or
 	 * because permissions were already granted.
 	 * @param {OnPermissionPromptResultCallback} cb
@@ -269,7 +262,7 @@ export class AssetManager {
 		const assetSettings = {};
 
 		let hasAssets = false;
-		/** @type {import("./AssetSettingsDiskTypes.ts").AssetSettingsDiskData["assets"]} */
+		/** @type {import("./AssetSettingsDiskTypes.ts").AssetSettingsDiskData["projectFiles"]} */
 		const assets = {};
 		for (const [uuid, projectAsset] of this.projectAssets) {
 			if (projectAsset.needsAssetSettingsSave) {
@@ -279,7 +272,7 @@ export class AssetManager {
 			}
 		}
 		if (hasAssets) {
-			assetSettings.assets = assets;
+			assetSettings.projectFiles = assets;
 		}
 
 		assetSettings.defaultAssetLinks = {};
@@ -294,7 +287,7 @@ export class AssetManager {
 		if (savedDefaultAssetLinksCount == 0) {
 			delete assetSettings.defaultAssetLinks;
 		}
-		await this.fileSystem.writeJson(this.assetSettingsPath, assetSettings);
+		await this.fileSystem.writeJson(ASSET_SETTINGS_PATH, assetSettings);
 	}
 
 	/**
@@ -356,7 +349,7 @@ export class AssetManager {
 	 * @param {string?} assetType
 	 */
 	async registerAsset(path, assetType = null) {
-		await this.loadAssetSettings(true);
+		await this.loadProjectAssetSettings(true);
 		const projectAsset = this.projectAssetFactory({ path, assetType, forceAssetType });
 		this.projectAssets.set(projectAsset.uuid, projectAsset);
 		if (projectAsset.needsAssetSettingsSave) {
@@ -516,7 +509,7 @@ export class AssetManager {
 		assertAssetType = null,
 		assertExists = false,
 	} = /** @type {T} */ ({})) {
-		await this.loadAssetSettings(true);
+		await this.loadProjectAssetSettings(true);
 		const projectAsset = this.getProjectAssetFromUuidSync(uuid);
 		if (!projectAsset) {
 			if (assertExists) {
@@ -582,7 +575,7 @@ export class AssetManager {
 		registerIfNecessary = true,
 		assertionOptions = null,
 	} = {}) {
-		await this.loadAssetSettings(true);
+		await this.loadProjectAssetSettings(true);
 		let projectAsset = null;
 		for (const asset of this.projectAssets.values()) {
 			if (AssetManager.testPathMatch(path, asset.path)) {
@@ -621,7 +614,7 @@ export class AssetManager {
 	 * @param {string[]} path
 	 */
 	async getAssetSettings(path = []) {
-		await this.loadAssetSettings(true);
+		await this.loadProjectAssetSettings(true);
 	}
 
 	/**

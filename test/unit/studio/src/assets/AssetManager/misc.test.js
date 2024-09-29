@@ -80,8 +80,8 @@ Deno.test({
 		const assetSettings = await mockFileSystem.readJson(ASSET_SETTINGS_PATH);
 		const castAssetSettings = /** @type {import("../../../../../../studio/src/assets/AssetSettingsDiskTypes.ts").AssetSettingsDiskData?} */ (assetSettings);
 		assertExists(castAssetSettings);
-		assertExists(castAssetSettings.assets);
-		assertEquals(Object.entries(castAssetSettings.assets).length, 1);
+		assertExists(castAssetSettings.projectFiles);
+		assertEquals(Object.entries(castAssetSettings.projectFiles).length, 1);
 	},
 });
 
@@ -111,8 +111,8 @@ Deno.test({
 		const assetSettings = await mockFileSystem.readJson(ASSET_SETTINGS_PATH);
 		const castAssetSettings = /** @type {import("../../../../../../studio/src/assets/AssetSettingsDiskTypes.ts").AssetSettingsDiskData?} */ (assetSettings);
 		assertExists(castAssetSettings);
-		assertExists(castAssetSettings.assets);
-		assertEquals(Object.entries(castAssetSettings.assets).length, 2);
+		assertExists(castAssetSettings.projectFiles);
+		assertEquals(Object.entries(castAssetSettings.projectFiles).length, 2);
 	},
 });
 
