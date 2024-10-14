@@ -218,18 +218,6 @@ export class AssetManager {
 	})
 
 	/**
-	 * You'll likely want to use {@linkcode waitForAssetListsLoad} instead because
-	 * this method doesn't wait for built-in assets to load.
-	 * Returns a promise that resolves once an asset manager has been loaded.
-	 */
-	async waitForAssetSettingsLoad() {
-		if (this.assetSettingsLoaded) return;
-		/** @type {Promise<void>} */
-		const promise = new Promise((r) => this.waitForAssetSettingsLoadCbs.add(r));
-		await promise;
-	}
-
-	/**
 	 * This callback is called when the user dismissed the prompt asking for
 	 * file system permissions that was triggered by a call to {@linkcode loadProjectAssetSettings},
 	 * This also fires when permission has been granted, either via the prompt or
@@ -253,8 +241,10 @@ export class AssetManager {
 	 * since methods like these will return null when the asset lists are not yet loaded.
 	 */
 	async waitForAssetListsLoad() {
-		await this.waitForAssetSettingsLoad();
-		await this.builtInAssetManager.waitForLoad();
+		if (this.assetSettingsLoaded) return;
+		/** @type {Promise<void>} */
+		const promise = new Promise((r) => this.waitForAssetSettingsLoadCbs.add(r));
+		await promise;
 	}
 
 	async saveAssetSettings() {

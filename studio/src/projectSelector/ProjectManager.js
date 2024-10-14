@@ -174,8 +174,11 @@ export class ProjectManager {
 
 		if (hooks.beforeAssetManagerReload) await hooks.beforeAssetManagerReload();
 
-		await this.reloadAssetManager();
+		const assetManager = await this.#reloadAssetManager();
 		await this.waitForAssetListsLoad();
+		this.#onAssetManagerLoadPromiseCbs.forEach((cb) => cb());
+		this.#onAssetManagerLoadPromiseCbs.clear();
+		this.#onAssetManagerChangeCbs.forEach((cb) => cb(assetManager));
 
 		const contentWindowPreferences = await this.#currentPreferencesLocation.getContentWindowPreferences();
 		studio.windowManager.setContentWindowPreferences(contentWindowPreferences);
@@ -209,7 +212,7 @@ export class ProjectManager {
 		this.assetManager = null;
 	}
 
-	async reloadAssetManager() {
+	async #reloadAssetManager() {
 		if (!this.currentProjectFileSystem) {
 			throw new Error("Unable to reload the asset manager. No active file system.");
 		}
@@ -218,10 +221,7 @@ export class ProjectManager {
 		const projectAssetTypeManager = studio.projectAssetTypeManager;
 		const assetManager = new AssetManager(this, studio.builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, this.currentProjectFileSystem);
 		this.assetManager = assetManager;
-		await this.assetManager.waitForAssetSettingsLoad();
-		this.#onAssetManagerLoadPromiseCbs.forEach((cb) => cb());
-		this.#onAssetManagerLoadPromiseCbs.clear();
-		this.#onAssetManagerChangeCbs.forEach((cb) => cb(assetManager));
+		return assetManager;
 	}
 
 	/**
