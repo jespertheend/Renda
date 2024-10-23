@@ -127,7 +127,7 @@ export class AssetManager {
 	#onPermissionPromptResultCbs = new Set();
 
 	#builtInAssetLibrary;
-	#projectAssetLibrary = new ProjectAssetLibrary();
+	#projectAssetLibrary;
 	get projectAssetLibrary() {
 		return this.#projectAssetLibrary;
 	}
@@ -137,11 +137,13 @@ export class AssetManager {
 	 * @param {AssetLibrary} builtInAssetLibrary
 	 * @param {import("./BuiltInDefaultAssetLinksManager.js").BuiltInDefaultAssetLinksManager} builtInDefaultAssetLinksManager
 	 * @param {import("./ProjectAssetTypeManager.js").ProjectAssetTypeManager} projectAssetTypeManager
+	 * @param {import("./StudioAssetLoaderManager.js").StudioAssetLoaderManager} studioAssetLoaderManager
 	 * @param {import("../util/fileSystems/StudioFileSystem.js").StudioFileSystem} fileSystem
 	 */
-	constructor(projectManager, builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, fileSystem) {
+	constructor(projectManager, builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, studioAssetLoaderManager, fileSystem) {
 		this.projectManager = projectManager;
 		this.#builtInAssetLibrary = builtInAssetLibrary;
+		this.#projectAssetLibrary = new ProjectAssetLibrary(studioAssetLoaderManager);
 		this.builtInDefaultAssetLinksManager = builtInDefaultAssetLinksManager;
 		this.projectAssetTypeManager = projectAssetTypeManager;
 		this.fileSystem = fileSystem;
@@ -153,10 +155,6 @@ export class AssetManager {
 		this.embeddedAssets = new WeakMap();
 		/** @type {Map<import("../../../src/mod.js").UuidString, DefaultAssetLink>}*/
 		this.defaultAssetLinks = new Map();
-
-		this.assetSettingsLoaded = false;
-		/** @type {Set<() => void>} */
-		this.waitForAssetSettingsLoadCbs = new Set();
 
 		this.fileSystem.onChange(this.#onFileChange);
 
@@ -211,10 +209,6 @@ export class AssetManager {
 				}
 			}
 		}
-		for (const cb of this.waitForAssetSettingsLoadCbs) {
-			cb();
-		}
-		this.assetSettingsLoaded = true;
 	})
 
 	/**
@@ -233,18 +227,6 @@ export class AssetManager {
 	 */
 	removeOnPermissionPromptResult(cb) {
 		this.#onPermissionPromptResultCbs.delete(cb);
-	}
-
-	/**
-	 * Waits for both the list of project assets and the builtin assets to be loaded.
-	 * This is useful when making calls like {@linkcode getProjectAssetFromUuidSync}
-	 * since methods like these will return null when the asset lists are not yet loaded.
-	 */
-	async waitForAssetListsLoad() {
-		if (this.assetSettingsLoaded) return;
-		/** @type {Promise<void>} */
-		const promise = new Promise((r) => this.waitForAssetSettingsLoadCbs.add(r));
-		await promise;
 	}
 
 	async saveAssetSettings() {
@@ -617,16 +599,14 @@ export class AssetManager {
 
 	/**
 	 * @template {AssetAssertionOptions} T
-	 * @param {import("../../../src/mod.js").UuidString?} uuid
+	 * @param {import("../../../src/mod.js").UuidString} uuid
 	 * @param {T} [assertionOptions]
 	 * @returns {Promise<AssetAssertionOptionsToLiveAsset<T>>}
 	 */
 	async getLiveAsset(uuid, assertionOptions) {
-		const projectAsset = await this.getProjectAssetFromUuid(uuid, assertionOptions);
-		if (!projectAsset) return /** @type {AssetAssertionOptionsToLiveAsset<T>} */ (null);
-
-		const liveAsset = await projectAsset.getLiveAsset();
-		return /** @type {AssetAssertionOptionsToLiveAsset<T>} */ (liveAsset);
+		const builtInLiveAsset = await this.#builtInAssetLibrary.getLiveAssetByUuid(uuid);
+		if (builtInLiveAsset) return builtInLiveAsset;
+		return await this.#projectAssetLibrary.getLiveAssetByUuid(uuid);
 	}
 
 	/**

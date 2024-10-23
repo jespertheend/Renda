@@ -50,6 +50,8 @@ import { FilePreferencesLocation } from "../preferences/preferencesLocation/File
 /** @typedef {(assetManager: AssetManager) => void} OnAssetManagerChangeCallback */
 
 export class ProjectManager {
+	#studioAssetLoaderManager;
+
 	#boundOnFileSystemRootNameChange;
 
 	/** @type {FilePreferencesLocation?} */
@@ -90,7 +92,11 @@ export class ProjectManager {
 	/** @type {Set<(entry: StoredProjectEntryAny?) => any>} */
 	#onProjectOpenEntryChangeCbs = new Set();
 
-	constructor() {
+	/**
+	 * @param {import("../assets/StudioAssetLoaderManager.js").StudioAssetLoaderManager} studioAssetLoaderManager
+	 */
+	constructor(studioAssetLoaderManager) {
+		this.#studioAssetLoaderManager = studioAssetLoaderManager;
 		/** @type {import("../util/fileSystems/StudioFileSystem.js").StudioFileSystem?} */
 		this.currentProjectFileSystem = null;
 		this.currentProjectIsMarkedAsWorthSaving = false;
@@ -175,7 +181,6 @@ export class ProjectManager {
 		if (hooks.beforeAssetManagerReload) await hooks.beforeAssetManagerReload();
 
 		const assetManager = await this.#reloadAssetManager();
-		await this.waitForAssetListsLoad();
 		this.#onAssetManagerLoadPromiseCbs.forEach((cb) => cb());
 		this.#onAssetManagerLoadPromiseCbs.clear();
 		this.#onAssetManagerChangeCbs.forEach((cb) => cb(assetManager));
@@ -219,7 +224,7 @@ export class ProjectManager {
 		const studio = getStudioInstance();
 		const builtInDefaultAssetLinksManager = studio.builtInDefaultAssetLinksManager;
 		const projectAssetTypeManager = studio.projectAssetTypeManager;
-		const assetManager = new AssetManager(this, studio.builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, this.currentProjectFileSystem);
+		const assetManager = new AssetManager(this, studio.builtInAssetLibrary, builtInDefaultAssetLinksManager, projectAssetTypeManager, this.#studioAssetLoaderManager, this.currentProjectFileSystem);
 		this.assetManager = assetManager;
 		return assetManager;
 	}
@@ -234,10 +239,10 @@ export class ProjectManager {
 	}
 
 	/**
-	 * If the asset manager doesn't exist, waits for it to load and returns it.
+	 * Returns a promise that resolves once an asset manager exists.
 	 */
 	async getAssetManager() {
-		if (this.assetManager && this.assetManager.assetSettingsLoaded) return this.assetManager;
+		if (this.assetManager) return this.assetManager;
 		/** @type {Promise<void>} */
 		const promise = new Promise((r) => this.#onAssetManagerLoadPromiseCbs.add(r));
 		await promise;

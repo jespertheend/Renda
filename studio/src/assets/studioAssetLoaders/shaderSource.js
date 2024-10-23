@@ -6,8 +6,11 @@ export const shaderSourceStudioAssetLoader = /** @satisfies {import("../StudioAs
 	async load(fileData, ctx) {
 		const source = ctx.parseText(fileData);
 		const { shaderCode, includedUuids } = await ctx.studio.webGpuShaderBuilder.buildShader(source);
-		const liveAsset = new ShaderSource(shaderCode);
-		const liveAssetRef = ctx.createLiveAsset(liveAsset);
+		const asset = ctx.createAsset(["main"]);
+		if (asset.needsLiveAsset) {
+			const liveAsset = new ShaderSource(shaderCode);
+			asset.setLiveAsset(liveAsset);
+		}
 
 		ctx.studio.webGpuShaderBuilder.onShaderInvalidated((uuid) => {
 			if (includedUuids.includes(uuid)) {

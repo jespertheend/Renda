@@ -7,7 +7,7 @@ Deno.test({
 		const manager = new StudioAssetLoaderManager();
 		manager.init();
 
-		const result = manager.getAssetLoader("shader");
+		const result = manager.getAssetLoaderByExtension("shader");
 
 		assertExists(result);
 	},
@@ -37,8 +37,8 @@ Deno.test({
 			});
 		}, Error, `Tried to register an asset loader with an empty extension string.`);
 
-		assertEquals(manager.getAssetLoader("valid"), null);
-		assertEquals(manager.getAssetLoader("alsovalid"), null);
+		assertEquals(manager.getAssetLoaderByExtension("valid"), null);
+		assertEquals(manager.getAssetLoaderByExtension("alsovalid"), null);
 	},
 });
 
@@ -51,7 +51,7 @@ Deno.test({
 		}
 		manager.registerAssetLoader(loader);
 
-		const result = manager.getAssetLoader("extension");
+		const result = manager.getAssetLoaderByExtension("extension");
 
 		assertStrictEquals(result, loader);
 	},
@@ -62,7 +62,7 @@ Deno.test({
 	fn() {
 		const manager = new StudioAssetLoaderManager();
 
-		const result = manager.getAssetLoader("nonexistent");
+		const result = manager.getAssetLoaderByExtension("nonexistent");
 
 		assertEquals(result, null);
 	},

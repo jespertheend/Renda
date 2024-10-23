@@ -117,8 +117,6 @@ export class ContentWindowProject extends ContentWindow {
 		});
 		this.addTopBarEl(openProjectButton.el);
 
-		this.contentEl.appendChild(this.treeView.el);
-
 		/** @type {import("../../misc/SelectionGroup.js").SelectionGroup<import("../../assets/ProjectAsset.js").ProjectAssetAny>} */
 		this.selectionGroup = this.studioInstance.selectionManager.createSelectionGroup();
 
@@ -132,10 +130,11 @@ export class ContentWindowProject extends ContentWindow {
 		if (fs) {
 			this.initialUpdateTreeView();
 			this.updateRootName();
-			this.treeView.renameable = fs.rootNameSetSupported;
-			fs.onRootNameChange((newName) => {
-				this.treeView.name = newName;
-			});
+			// TODO:
+			// this.treeView.renameable = fs.rootNameSetSupported;
+			// fs.onRootNameChange((newName) => {
+			// 	this.treeView.name = newName;
+			// });
 		}
 
 		this.studioInstance.projectManager.onFileChange(this.#onFileChange);
@@ -148,6 +147,7 @@ export class ContentWindowProject extends ContentWindow {
 		const assetManager = await this.studioInstance.projectManager.getAssetManager();
 		if (this.destructed) return;
 		this.#treeView = new ProjectFilesTreeView(assetManager.projectAssetLibrary);
+		this.contentEl.appendChild(this.#treeView.treeView.el);
 	}
 
 	destructor() {
@@ -301,9 +301,10 @@ export class ContentWindowProject extends ContentWindow {
 	 */
 	async expandRootOnLoad() {
 		const assetManager = await this.studioInstance.projectManager.getAssetManager();
-		if (assetManager.assetSettingsLoaded) {
-			this.treeView.collapsed = false;
-		}
+		// TODO:
+		// if (assetManager.assetSettingsLoaded) {
+		// 	this.treeView.collapsed = false;
+		// }
 	}
 
 	/**

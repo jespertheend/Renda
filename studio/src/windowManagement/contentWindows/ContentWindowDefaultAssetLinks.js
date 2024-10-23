@@ -47,7 +47,6 @@ export class ContentWindowDefaultAssetLinks extends ContentWindow {
 	}
 
 	async loadDefaultAssetLinks() {
-		await this.studioInstance.projectManager.waitForAssetListsLoad();
 		const assetManager = await this.studioInstance.projectManager.getAssetManager();
 		if (!this.el) return; // the content window was destructed
 

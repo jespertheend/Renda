@@ -20,8 +20,11 @@ export class BuiltInAssetLibrary extends AssetLibrary {
 	/** @type {import("../../network/DevSocketManager.js").DevSocketManager?} */
 	#devSocket = null;
 
-	constructor() {
-		super();
+	/**
+	 * @param  {ConstructorParameters<typeof AssetLibrary>} args
+	 */
+	constructor(...args) {
+		super(...args);
 		this.#loadAssetsInstance.run();
 	}
 
@@ -47,5 +50,15 @@ export class BuiltInAssetLibrary extends AssetLibrary {
 		devSocket.addListener("builtInAssetListUpdate", () => {
 			this.#loadAssetsInstance.run();
 		});
+	}
+
+	/**
+	 * @override
+	 * @param {import("../../util/fileSystems/StudioFileSystem.js").StudioFileSystemPath} path
+	 */
+	async readFile(path) {
+		const response = await fetch(BUILTIN_ASSETS_BASE_PATH + path.join("/"));
+		if (!response.ok) return null;
+		return await response.arrayBuffer();
 	}
 }

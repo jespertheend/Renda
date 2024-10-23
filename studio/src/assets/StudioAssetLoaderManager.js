@@ -5,14 +5,20 @@ import { autoRegisterStudioAssetLoaders } from "./autoRegisterDiskAssetLoaders.j
  * @property {boolean} [isStudioJson] If true (which is the default) the asset will be loaded as json file in the Renda Studio format.
  * @property {string[]} [extensions] The extensions to match against when determining whether a file should be loaded using this loader.
  * This does nothing when `isStudioJson` is set to true.
- * @property {(fileData: ArrayBuffer, ctx: StudioAssetLoadContext) => void} [load] This is called when data from a file needs to be loaded into one or more live assets.
+ * @property {(fileData: ArrayBuffer, ctx: StudioAssetLoadContext) => void | Promise<void>} [load] This is called when data from a file needs to be loaded into one or more live assets.
  */
 
 /**
  * @typedef StudioAssetLoadContext
  * @property {import("../Studio.js").Studio} studio
  * @property {(fileData: ArrayBuffer) => string} parseText
- * @property {(liveAssetInstance: any) => void} createLiveAsset
+ * @property {(assetPath: import("../util/fileSystems/StudioFileSystem.js").StudioFileSystemPath) => StudioAssetLoadAsset} createAsset
+ */
+
+/**
+ * @typedef StudioAssetLoadAsset
+ * @property {boolean} needsLiveAsset
+ * @property {(liveAsset: any) => void} setLiveAsset
  */
 
 export class StudioAssetLoaderManager {
@@ -26,10 +32,10 @@ export class StudioAssetLoaderManager {
 	}
 
 	/**
-	 * @param {StudioAssetLoader} diskAssetLoader
+	 * @param {StudioAssetLoader} studioAssetLoader
 	 */
-	registerAssetLoader(diskAssetLoader) {
-		const { extensions } = diskAssetLoader;
+	registerAssetLoader(studioAssetLoader) {
+		const { extensions } = studioAssetLoader;
 		if (extensions) {
 			for (const extension of extensions) {
 				if (!extension) {
@@ -41,7 +47,7 @@ export class StudioAssetLoaderManager {
 				if (this.#registeredAssetLoaders.has(extension)) {
 					throw new Error(`An asset loader for the extension ".${extension}" has already been registered.`);
 				}
-				this.#registeredAssetLoaders.set(extension, diskAssetLoader);
+				this.#registeredAssetLoaders.set(extension, studioAssetLoader);
 			}
 		}
 	}
@@ -49,7 +55,8 @@ export class StudioAssetLoaderManager {
 	/**
 	 * @param {string} extension
 	 */
-	getAssetLoader(extension) {
+	getAssetLoaderByExtension(extension) {
+		// TODO: throw an error for .json files
 		return this.#registeredAssetLoaders.get(extension) ?? null;
 	}
 }

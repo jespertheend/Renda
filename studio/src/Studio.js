@@ -18,7 +18,7 @@ import { ServiceWorkerManager } from "./misc/ServiceWorkerManager.js";
 import { IS_DEV_BUILD } from "./studioDefines.js";
 import { DevSocketManager } from "./network/DevSocketManager.js";
 import { ComponentTypeManager } from "../../src/components/ComponentTypeManager.js";
-import { AssetLoader, EngineAssetsManager, IndexedDbUtil, ShaderBuilder, WebGpuRenderer, builtInComponents } from "../../src/mod.js";
+import { AssetLoader, EngineAssetsManager, IndexedDbUtil, ShaderBuilder, ShaderSource, WebGpuRenderer, builtInComponents } from "../../src/mod.js";
 // import { ProjectAssetTypeShaderSource } from "./assets/projectAssetTypes/ProjectAssetTypeShaderSource.js";
 import { PreferencesManager } from "./preferences/PreferencesManager.js";
 import { autoRegisterPreferences } from "./preferences/autoRegisterPreferences.js";
@@ -27,8 +27,8 @@ import { GestureInProgressManager } from "./misc/GestureInProgressManager.js";
 import { WebGpuRendererError } from "../../src/rendering/renderers/webGpu/WebGpuRendererError.js";
 import { StudioConnectionsManager } from "./network/studioConnections/StudioConnectionsManager.js";
 import { ScrollHardwareDetector } from "../../src/util/ScrollHardwareDetector.js";
-import { AssetLibrary } from "./assets/assetLibrary/AssetLibrary.js";
 import { BuiltInAssetLibrary } from "./assets/assetLibrary/BuiltInAssetLibrary.js";
+import { StudioAssetLoaderManager } from "./assets/StudioAssetLoaderManager.js";
 
 export class Studio {
 	constructor() {
@@ -67,10 +67,11 @@ export class Studio {
 		this.historyManager = new HistoryManager(this.keyboardShortcutManager);
 		this.componentGizmosManager = new ComponentGizmosManager();
 		this.materialMapTypeSerializerManager = new MaterialMapTypeSerializerManager();
-		this.projectManager = new ProjectManager();
+		this.studioAssetLoaderManager = new StudioAssetLoaderManager();
+		this.projectManager = new ProjectManager(this.studioAssetLoaderManager);
 		this.studioConnectionsManager = new StudioConnectionsManager(this.projectManager, this.preferencesManager);
 		this.builtInDefaultAssetLinksManager = new BuiltInDefaultAssetLinksManager();
-		this.builtInAssetLibrary = new BuiltInAssetLibrary();
+		this.builtInAssetLibrary = new BuiltInAssetLibrary(this.studioAssetLoaderManager);
 		this.dragManager = new DragManager();
 		this.scrollHardwareDetector = new ScrollHardwareDetector();
 		this.serviceWorkerManager = new ServiceWorkerManager();
@@ -103,7 +104,8 @@ export class Studio {
 			this.builtInAssetLibrary.initDevSocket(this.devSocket);
 		}
 		this.engineAssetManager.addGetAssetHandler(async (uuid) => {
-			return await this.builtInAssetLibrary.getLiveAsset(uuid);
+			const assetManager = await this.projectManager.getAssetManager();
+			return await assetManager.getLiveAsset(uuid);
 			// await this.builtInAssetManager.waitForLoad();
 			// await this.projectManager.waitForAssetListsLoad();
 			// const projectAsset = this.builtInAssetManager.assets.get(uuid);
@@ -142,20 +144,17 @@ export class Studio {
 		this.taskManager.init();
 		this.componentGizmosManager.init();
 		this.materialMapTypeSerializerManager.init();
+		this.studioAssetLoaderManager.init();
 		this.builtInDefaultAssetLinksManager.init();
 		this.serviceWorkerManager.init();
 
 		this.webGpuShaderBuilder.onShaderUuidRequested(async (uuid) => {
 			const assetManager = await this.projectManager.getAssetManager();
-			const projectAsset = await assetManager.getProjectAssetFromUuid(uuid, {
-				assertAssetType: "renda:shaderSource",
+			const shader = await assetManager.getLiveAsset(uuid, {
+				assertAssetType: ShaderSource,
 			});
-			if (projectAsset) {
-				if (projectAsset.assetType == "renda:shaderSource") {
-					return await projectAsset.readAssetData();
-				}
-			}
-			return null;
+			if (!shader) return null;
+			return shader.source;
 		});
 
 		this.projectManager.onFileChange(async (e) => {
