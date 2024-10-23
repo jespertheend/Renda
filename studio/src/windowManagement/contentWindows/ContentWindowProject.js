@@ -121,21 +121,6 @@ export class ContentWindowProject extends ContentWindow {
 		this.selectionGroup = this.studioInstance.selectionManager.createSelectionGroup();
 
 		this.rootNameInit = false;
-		this.treeViewInit = false;
-		this.initCbsCalled = false;
-		/** @type {Set<() => void>} */
-		this.onInitCbs = new Set();
-
-		const fs = this.studioInstance.projectManager.currentProjectFileSystem;
-		if (fs) {
-			this.initialUpdateTreeView();
-			this.updateRootName();
-			// TODO:
-			// this.treeView.renameable = fs.rootNameSetSupported;
-			// fs.onRootNameChange((newName) => {
-			// 	this.treeView.name = newName;
-			// });
-		}
 
 		this.studioInstance.projectManager.onFileChange(this.#onFileChange);
 
@@ -176,32 +161,6 @@ export class ContentWindowProject extends ContentWindow {
 		if (!this.treeView) return; // destructed
 		this.treeView.name = name;
 		this.rootNameInit = true;
-		this.updateInit();
-	}
-
-	async initialUpdateTreeView() {
-		await this.fileSystem.waitForPermission([], { writable: false });
-		await this.updateTreeView();
-		this.treeViewInit = true;
-		this.updateInit();
-	}
-
-	get isInit() {
-		return this.rootNameInit && this.treeViewInit;
-	}
-
-	async waitForInit() {
-		if (this.isInit) return;
-		/** @type {Promise<void>} */
-		const promise = new Promise((r) => this.onInitCbs.add(r));
-		await promise;
-	}
-
-	updateInit() {
-		if (!this.isInit) return;
-		if (this.initCbsCalled) return;
-		this.initCbsCalled = true;
-		this.onInitCbs.forEach((cb) => cb());
 	}
 
 	/**

@@ -34,13 +34,6 @@ export class ContentWindowBuiltInAssets extends ContentWindow {
 
 		/** @type {import("../../misc/SelectionGroup.js").SelectionGroup<import("../../assets/ProjectAsset.js").ProjectAssetAny>} */
 		this.selectionGroup = this.studioInstance.selectionManager.createSelectionGroup();
-
-		this.init();
-	}
-
-	async init() {
-		await this.studioInstance.builtInAssetManager.waitForLoad();
-		this.updateTreeView();
 	}
 
 	destructor() {
@@ -48,33 +41,6 @@ export class ContentWindowBuiltInAssets extends ContentWindow {
 
 		this.treeView.destructor();
 		this.selectionGroup.destructor();
-	}
-
-	updateTreeView() {
-		if (this.destructed) return;
-		for (const asset of this.studioInstance.builtInAssetManager.assets.values()) {
-			this.addAssetToTreeView(asset, asset.path, this.treeView);
-		}
-	}
-
-	/**
-	 * @param {import("../../assets/ProjectAsset.js").ProjectAssetAny} asset
-	 * @param {string[]} path
-	 * @param {TreeView} treeView
-	 */
-	addAssetToTreeView(asset, path, treeView) {
-		const [name, ...restPath] = path;
-		let child = treeView.getChildByName(name);
-		if (!child) {
-			child = treeView.addChild();
-			child.name = path[0];
-			child.collapsed = true;
-		}
-		if (path.length > 1) {
-			this.addAssetToTreeView(asset, restPath, child);
-		} else {
-			this.treeViewAssets.set(child, asset);
-		}
 	}
 
 	/**
